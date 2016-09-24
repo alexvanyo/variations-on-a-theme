@@ -1,4 +1,5 @@
 import midi
+import random
 
 pattern = midi.read_midifile("Mary had a little lamb.mid")
 
@@ -37,7 +38,30 @@ def groupNotes(pattern):
     # returns the grouped notes
     return notes
 
+# randomizes notes
+def randomize(notes):
+
+    # TODO fix if last value doesn't appear anywhere else
+    lastNote = 0
+    if (notes[len(notes)-1][1] == -1):
+        lastNote = notes[len(notes)-1][0]
+    else:
+        lastNote = notes[len(notes) - 1][1]
+
+    nextNotes = []
+    for i in xrange(len(notes)):
+        if (notes[i][0] == lastNote):
+            nextNotes.append(notes[i][1])
+
+    randomNote = random.randint(0,len(nextNotes)-1)
+    nextNote = nextNotes[randomNote]
+
+    if (notes[len(notes)-1][1] == -1):
+        notes[len(notes) - 1][1] = nextNote
+    else:
+        notes.append([nextNote, -1])
+
+    return notes
+
 notes = groupNotes(pattern)
-# prints for aesthetics
-for i in xrange(len(notes)):
-    print notes[i]
+notes = randomize(notes)
