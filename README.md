@@ -2,7 +2,7 @@
 A program that takes an input MIDI song and outputs a new MIDI song based on the original
 
 ### Team meetings:  
-* Sundays at 2pm  
+* Wednesdays at 10:30pm  
 * Location TBD
 
 ### TODO for next meeting:
