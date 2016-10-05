@@ -62,5 +62,92 @@ def simpleFileRandomizer(file_name):
         s1.append(n)
     s1.show('midi')
 
+#simpleFileRandomizer('MaryHadLittleLamb.mid')
 
-simpleFileRandomizer('MaryHadLittleLamb.mid')
+def getMelodyPart(file_name):
+    pass
+
+def getPartsInfo(file_name):
+    songFile = converter.parse(file_name) #SummerNo3 has 14 instrument parts
+    partsList = songFile.getElementsByClass(stream.Part) #Convenient list of parts
+    noteList = []
+    DurList = []
+    OctList = []
+    for i in range((len(partsList))): #Parses through the different parts
+        noteList.append([])
+        DurList.append([])
+        OctList.append([])
+        for m in range(len(partsList[i].getElementsByClass(stream.Measure))): #Iterates through measures
+            for n in range(len(partsList[i].getElementsByClass(stream.Measure)[m].getElementsByClass(note.Note))): #Iterates through each note
+                noteInList = partsList[i].getElementsByClass(stream.Measure)[m].getElementsByClass(note.Note)[n]
+                noteList[i].append(noteInList) #Appends notes to list
+                DurList[i].append(noteInList.duration.quarterLength)
+                OctList[i].append(noteInList.octave)
+    aDLSums = [] #Two one time arrays to just store the values of the sums
+    aOLSums = []
+    avgDurList = [] #For storing the average and determining the max
+    avgOctList = []
+    for i in range(len(DurList)):
+        aDLSums.append(0)
+        for val in DurList[i]:
+            aDLSums[i] += val
+    for i in range(len(OctList)):
+        aOLSums.append(0)
+        for val in OctList[i]:
+            aOLSums[i] += val
+    for i in range(len(DurList)):
+        avgDurList.append(aDLSums[i]/len(DurList[i]))
+    for i in range(len(OctList)):
+        avgOctList.append(aOLSums[i]/len(OctList[i]))
+    totalAverages = []
+    for i in range(len(DurList)):
+        totalAverages.append((avgDurList[i] + avgOctList[i])/2)
+
+    return totalAverages.index(max(totalAverages)) #Returns max average index, this is also the index part number
+
+def getPartsTest():
+    songFile = corpus.parse('bach/bwv57.8')
+    partsList = songFile.getElementsByClass(stream.Part) #Convenient list of parts
+    noteList = []
+    DurList = []
+    OctList = []
+    for i in range((len(partsList))): #Parses through the different parts
+        noteList.append([])
+        DurList.append([])
+        OctList.append([])
+        for m in range(len(partsList[i].getElementsByClass(stream.Measure))): #Iterates through measures
+            for n in range(len(partsList[i].getElementsByClass(stream.Measure)[m].getElementsByClass(note.Note))): #Iterates through each note
+                noteInList = partsList[i].getElementsByClass(stream.Measure)[m].getElementsByClass(note.Note)[n]
+                noteList[i].append(noteInList) #Appends notes to list
+                DurList[i].append(noteInList.duration.quarterLength)
+                OctList[i].append(noteInList.octave)
+    aDLSums = [] #Two one time arrays to just store the values of the sums
+    aOLSums = []
+    avgDurList = [] #For storing the average and determining the max
+    avgOctList = []
+    for i in range(len(DurList)):
+        aDLSums.append(0)
+        for val in DurList[i]:
+            aDLSums[i] += val
+    for i in range(len(OctList)):
+        aOLSums.append(0)
+        for val in OctList[i]:
+            aOLSums[i] += val
+    for i in range(len(DurList)):
+        avgDurList.append(aDLSums[i]/len(DurList[i]))
+    for i in range(len(OctList)):
+        avgOctList.append(aOLSums[i]/len(OctList[i]))
+    totalAverages = []
+    for i in range(len(DurList)):
+        totalAverages.append((avgDurList[i] + avgOctList[i])/2)
+
+    print DurList
+    print OctList
+    print avgDurList
+    print avgOctList
+    print totalAverages
+
+    print totalAverages.index(max(totalAverages))
+
+getPartsTest()
+#getPartsInfo('SummerNo3.mid')
