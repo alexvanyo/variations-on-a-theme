@@ -10,33 +10,34 @@ def simpleFileRandomizer(file_name):
     songFile = converter.parse(file_name)
     pitches = []
     noteDurations = []
-    for p in songFile.parts: #Gets list of all notes in midi file
-        #print("Part: ", p.id)
-        for n in p.flat.notes:#Tyep is <class 'music21.note.Note'>
+    for p in songFile.parts: # Gets list of all notes in midi file
+        # print("Part: ", p.id)
+        for n in p.flat.notes: # Type is <class 'music21.note.Note'>
             noteDurations.append(n.duration.type)
+            # assumes n is a single note
             pitches.append(n.nameWithOctave)
-    print(noteDurations)
-    print(pitches)
+    # print(noteDurations)
+    # print(pitches)
     uniquePitches = []
-    for n in pitches: #Creates a list containing all of the unique notes in the midi
+    for n in pitches: # Creates a list containing all of the unique notes in the midi
         if n not in uniquePitches:
             uniquePitches.append(n)
-    print(uniquePitches)
+    # print(uniquePitches)
     pitchFrequencies = []
-    for pitch in uniquePitches: #Creates a 2D array that will contain corresponding frequencies of notes
+    for pitch in uniquePitches: # Creates a 2D array that will contain corresponding frequencies of notes
         pitchFrequencies.append([])
-    #print(pitchFrequencies)
-    for i in range(len(pitches)-1): #Adds notes into the corresponding arrays, these notes will then be used to calculate the percent chance of the next note
+    # print(pitchFrequencies)
+    for i in range(len(pitches)-1): # Adds notes into the corresponding arrays, these notes will then be used to calculate the percent chance of the next note
         pitchIndex = uniquePitches.index(pitches[i])
         pitchFrequencies[pitchIndex].append(pitches[i+1])
-    print(pitchFrequencies)
+    # print(pitchFrequencies)
     noteSequence = []
-    #NOTE: FOLLOWING SEQUENCE DOES NOT HAVE PENALIZING/REGENRATING PROBABILITIES IMPLEMENTED
-    #DOES NOT ACCOUNT FOR CASES IN WHICH ONLY ONE OPTION IS AVAILABLE
+    # NOTE: FOLLOWING SEQUENCE DOES NOT HAVE PENALIZING/REGENRATING PROBABILITIES IMPLEMENTED
+    # DOES NOT ACCOUNT FOR CASES IN WHICH ONLY ONE OPTION IS AVAILABLE
     for i in range(len(pitches)):
         if i == 0:
             noteSequence.append(pitches[i])
-        else: #All operations containing references to preceding note 2 are temporary in order to prevent constant repetition
+        else: # All operations containing references to preceding note 2 are temporary in order to prevent constant repetition
             precedingNote2 = 0
             precNote2Pass = False
             try:
@@ -50,9 +51,9 @@ def simpleFileRandomizer(file_name):
             else:
                 nextNote = pitchFrequencies[uniquePitches.index(precedingNote)][random.randint(0,len(pitchFrequencies[uniquePitches.index(precedingNote)])-1)]
             noteSequence.append(nextNote)
-    print(noteSequence)
-    #http://web.mit.edu/music21/doc/moduleReference/modulePitch.html#music21.pitch.Pitch.midi
-    #Guide for creating midi notes
+    # print(noteSequence)
+    # http://web.mit.edu/music21/doc/moduleReference/modulePitch.html#music21.pitch.Pitch.midi
+    # Guide for creating midi notes
     for i in range(len(noteSequence)):
         n = note.Note(noteSequence[i])
         if noteDurations[i] == 'quarter':
@@ -60,7 +61,4 @@ def simpleFileRandomizer(file_name):
         elif noteDurations[i] == 'half':
             n.duration = halfDuration
         s1.append(n)
-    s1.show('midi')
-
-
-simpleFileRandomizer('MaryHadLittleLamb.mid')
+    return (s1, pitches, noteSequence)
