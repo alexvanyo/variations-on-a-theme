@@ -11,12 +11,12 @@ PENALTY_HISTORY = 4
 # 1.0 - never repeat a note
 # 0.5 - 50% of the normal probability for a note
 # 0.0 - normal probability for a note
-PENALTY_STRICTNESS = 0.5
+PENALTY_STRICTNESS = 0.7
 
 # Amount that the penalty changes as the note gets further
 # away from the current note:
 # 0.1 - strictness decreases by 0.1 for every note
-PENALTY_MODIFIER = 0.1
+PENALTY_MODIFIER = 0.2
 
 s1 = stream.Stream()
 
@@ -80,7 +80,7 @@ def simpleFileRandomizer(file_name):
 
                     if checkIndex < 0:
                         break
-                    if note == noteSequence[i - 1 - j]:
+                    if noteName == noteSequence[i - 1 - j]:
                         probabilityModifier = max(0, (1 - PENALTY_STRICTNESS) - j * PENALTY_MODIFIER)
 
                         pitchMap[noteName] *= probabilityModifier
