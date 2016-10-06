@@ -5,18 +5,18 @@ halfDuration = duration.Duration(2)
 quartDuration = duration.Duration(1)
 
 # Number of notes to check for penalties
-PENALTY_HISTORY = 4
+PENALTY_HISTORY = 8
 
 # Range between 0 and 1 for initial strictness for penalties:
 # 1.0 - never repeat a note
 # 0.5 - 50% of the normal probability for a note
 # 0.0 - normal probability for a note
-PENALTY_STRICTNESS = 0.6
+PENALTY_STRICTNESS = 0.8
 
 # Amount that the penalty changes as the note gets further
 # away from the current note:
 # 0.1 - strictness decreases by 0.1 for every note
-PENALTY_MODIFIER = 0.2
+PENALTY_MODIFIER = 0.1
 
 s1 = stream.Stream()
 
@@ -73,7 +73,7 @@ def simpleFileRandomizer(file_name):
             precedingNote = noteSequence[i-1]
 
             # Create a new probability map for the current state
-            pitchMap = pitchFrequencies[precedingNote]
+            pitchMap = dict(pitchFrequencies[precedingNote])
             for noteName, probability in pitchMap.items():
                 for j in xrange(0, PENALTY_HISTORY):
                     checkIndex = i - 1 - j
@@ -81,7 +81,7 @@ def simpleFileRandomizer(file_name):
                     if checkIndex < 0:
                         break
                     if noteName == noteSequence[i - 1 - j]:
-                        probabilityModifier = max(0, (1 - PENALTY_STRICTNESS) + j * PENALTY_MODIFIER)
+                        probabilityModifier = min(1, max(0, (1 - PENALTY_STRICTNESS) + j * PENALTY_MODIFIER))
 
                         pitchMap[noteName] *= probabilityModifier
 
