@@ -75,11 +75,16 @@ def simpleFileRandomizer(file_name):
             # Create a new probability map for the current state
             pitchMap = dict(pitchFrequencies[precedingNote])
             for noteName, probability in pitchMap.items():
+                # Loop over past notes
                 for j in xrange(0, PENALTY_HISTORY):
+                    # Get the note to compare to
                     checkIndex = i - 1 - j
 
+                    # Check for a valid index
                     if checkIndex < 0:
                         break
+
+                    # Update the probabilities if we are repeating a note
                     if noteName == noteSequence[i - 1 - j]:
                         probabilityModifier = min(1, max(0, (1 - PENALTY_STRICTNESS) + j * PENALTY_MODIFIER))
 
@@ -88,12 +93,16 @@ def simpleFileRandomizer(file_name):
             probabilitySum = sum(pitchMap.values())
 
             if probabilitySum == 0:
+                # No valid note from the probabilities, just choose a random note
                 nextNote = uniquePitches[random.randint(0, len(uniquePitches) - 1)]
             else:
                 targetRandom = random.random()
                 previousSum = 0
+
+                # Weight the probabilities correctly
                 tempProbList = divideDictBy(pitchMap, probabilitySum)
 
+                # Get the next note from probabilities
                 for noteName, probability in tempProbList.items():
                     previousSum += probability
                     if targetRandom < previousSum:
