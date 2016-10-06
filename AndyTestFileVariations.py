@@ -4,7 +4,30 @@ import random
 halfDuration = duration.Duration(2)
 quartDuration = duration.Duration(1)
 
+# Number of notes to check for penalties
+PENALTY_HISTORY = 8
+
+# Range between 0 and 1 for initial strictness for penalties:
+# 1.0 - never repeat a note
+# 0.5 - 50% of the normal probability for a note
+# 0.0 - normal probability for a note
+PENALTY_STRICTNESS = 0.8
+
+# Amount that the penalty changes as the note gets further
+# away from the current note:
+# 0.1 - strictness decreases by 0.1 for every note
+PENALTY_MODIFIER = 0.1
+
 s1 = stream.Stream()
+
+# Non-destructive division of every element in a list
+def divideDictBy(dividingDict, divisor):
+    dictCopy = dict(dividingDict)
+
+    for key in dictCopy:
+        dictCopy[key] /= float(divisor)
+
+    return dictCopy
 
 def simpleFileRandomizer(file_name):
     songFile = converter.parse(file_name)
@@ -22,33 +45,70 @@ def simpleFileRandomizer(file_name):
         if n not in uniquePitches:
             uniquePitches.append(n)
     print(uniquePitches)
-    pitchFrequencies = []
-    for pitch in uniquePitches: #Creates a 2D array that will contain corresponding frequencies of notes
-        pitchFrequencies.append([])
-    #print(pitchFrequencies)
-    for i in range(len(pitches)-1): #Adds notes into the corresponding arrays, these notes will then be used to calculate the percent chance of the next note
-        pitchIndex = uniquePitches.index(pitches[i])
-        pitchFrequencies[pitchIndex].append(pitches[i+1])
-    print(pitchFrequencies)
+
+    # Pitch frequencies are recorded in a dictionary of dictionaries
+    # Each note has a dictionary of all the notes that follow it mapped to the probability
+    pitchFrequencies = {}
+    for pitch in uniquePitches:
+        pitchFrequencies[pitch] = {}
+
+    # Adds notes into the corresponding dictionaries, just by count for looping
+    for i in range(len(pitches)-1):
+        pitchMap = pitchFrequencies[pitches[i]]
+
+        pitchMap[pitches[i+1]] = pitchMap.get(pitches[i+1], 0) + 1
+
+    # Generate default probabilities for each note/following note pair
+    for pitch, pitchMap in pitchFrequencies.items():
+        pitchFrequencies[pitch] = divideDictBy(pitchMap, sum(pitchMap.values()))
+
     noteSequence = []
+
     #NOTE: FOLLOWING SEQUENCE DOES NOT HAVE PENALIZING/REGENRATING PROBABILITIES IMPLEMENTED
     #DOES NOT ACCOUNT FOR CASES IN WHICH ONLY ONE OPTION IS AVAILABLE
     for i in range(len(pitches)):
         if i == 0:
             noteSequence.append(pitches[i])
-        else: #All operations containing references to preceding note 2 are temporary in order to prevent constant repetition
-            precedingNote2 = 0
-            precNote2Pass = False
-            try:
-                precedingNote2 = noteSequence[i-2]
-                precNote2Pass = True
-            except:
-                pass
+        else:
             precedingNote = noteSequence[i-1]
-            if precedingNote2 == precedingNote and precNote2Pass == True:
-                nextNote = uniquePitches[random.randint(0,len(uniquePitches)-1)]
+
+            # Create a new probability map for the current state
+            pitchMap = dict(pitchFrequencies[precedingNote])
+            for noteName, probability in pitchMap.items():
+                # Loop over past notes
+                for j in xrange(0, PENALTY_HISTORY):
+                    # Get the note to compare to
+                    checkIndex = i - 1 - j
+
+                    # Check for a valid index
+                    if checkIndex < 0:
+                        break
+
+                    # Update the probabilities if we are repeating a note
+                    if noteName == noteSequence[i - 1 - j]:
+                        probabilityModifier = min(1, max(0, (1 - PENALTY_STRICTNESS) + j * PENALTY_MODIFIER))
+
+                        pitchMap[noteName] *= probabilityModifier
+
+            probabilitySum = sum(pitchMap.values())
+
+            if probabilitySum == 0:
+                # No valid note from the probabilities, just choose a random note
+                nextNote = uniquePitches[random.randint(0, len(uniquePitches) - 1)]
             else:
-                nextNote = pitchFrequencies[uniquePitches.index(precedingNote)][random.randint(0,len(pitchFrequencies[uniquePitches.index(precedingNote)])-1)]
+                targetRandom = random.random()
+                previousSum = 0
+
+                # Weight the probabilities correctly
+                tempProbList = divideDictBy(pitchMap, probabilitySum)
+
+                # Get the next note from probabilities
+                for noteName, probability in tempProbList.items():
+                    previousSum += probability
+                    if targetRandom < previousSum:
+                        nextNote = noteName
+                        break
+
             noteSequence.append(nextNote)
     print(noteSequence)
     #http://web.mit.edu/music21/doc/moduleReference/modulePitch.html#music21.pitch.Pitch.midi
@@ -63,4 +123,4 @@ def simpleFileRandomizer(file_name):
     s1.show('midi')
 
 
-simpleFileRandomizer('MaryHadLittleLamb.mid')
+simpleFileRandomizer('songs\mary.mid')
