@@ -33,18 +33,19 @@ def simpleFileRandomizer(file_name):
     songFile = converter.parse(file_name)
     pitches = []
     noteDurations = []
-    for p in songFile.parts: #Gets list of all notes in midi file
-        #print("Part: ", p.id)
-        for n in p.flat.notes:#Tyep is <class 'music21.note.Note'>
+    for p in songFile.parts: # Gets list of all notes in midi file
+        # print("Part: ", p.id)
+        for n in p.flat.notes: # Type is <class 'music21.note.Note'>
             noteDurations.append(n.duration.type)
+            # assumes n is a single note
             pitches.append(n.nameWithOctave)
-    print(noteDurations)
-    print(pitches)
+    # print(noteDurations)
+    # print(pitches)
     uniquePitches = []
-    for n in pitches: #Creates a list containing all of the unique notes in the midi
+    for n in pitches: # Creates a list containing all of the unique notes in the midi
         if n not in uniquePitches:
             uniquePitches.append(n)
-    print(uniquePitches)
+    # print(uniquePitches)
 
     # Pitch frequencies are recorded in a dictionary of dictionaries
     # Each note has a dictionary of all the notes that follow it mapped to the probability
@@ -63,9 +64,6 @@ def simpleFileRandomizer(file_name):
         pitchFrequencies[pitch] = divideDictBy(pitchMap, sum(pitchMap.values()))
 
     noteSequence = []
-
-    #NOTE: FOLLOWING SEQUENCE DOES NOT HAVE PENALIZING/REGENRATING PROBABILITIES IMPLEMENTED
-    #DOES NOT ACCOUNT FOR CASES IN WHICH ONLY ONE OPTION IS AVAILABLE
     for i in range(len(pitches)):
         if i == 0:
             noteSequence.append(pitches[i])
@@ -110,9 +108,9 @@ def simpleFileRandomizer(file_name):
                         break
 
             noteSequence.append(nextNote)
-    print(noteSequence)
-    #http://web.mit.edu/music21/doc/moduleReference/modulePitch.html#music21.pitch.Pitch.midi
-    #Guide for creating midi notes
+    # print(noteSequence)
+    # http://web.mit.edu/music21/doc/moduleReference/modulePitch.html#music21.pitch.Pitch.midi
+    # Guide for creating midi notes
     for i in range(len(noteSequence)):
         n = note.Note(noteSequence[i])
         if noteDurations[i] == 'quarter':
@@ -120,7 +118,8 @@ def simpleFileRandomizer(file_name):
         elif noteDurations[i] == 'half':
             n.duration = halfDuration
         s1.append(n)
-    s1.show('midi')
+    return (s1, pitches, noteSequence)
 
+#simpleFileRandomizer('MaryHadLittleLamb.mid')
 
 simpleFileRandomizer('songs\mary.mid')
