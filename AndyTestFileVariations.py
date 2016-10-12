@@ -1,12 +1,12 @@
 from music21 import *
-import random
+import random, numpy
 
 halfDuration = duration.Duration(2)
 quartDuration = duration.Duration(1)
 
 s1 = stream.Stream()
 
-def simpleFileRandomizer(file_name):
+def simpleFileRandomizer(file_name): #THERE IS NONFUNCTIONING CODE, THIS WILL NOT COMPILE
     songFile = converter.parse(file_name)
     pitches = []
     noteDurations = []
@@ -54,6 +54,15 @@ def simpleFileRandomizer(file_name):
     # print(noteSequence)
     # http://web.mit.edu/music21/doc/moduleReference/modulePitch.html#music21.pitch.Pitch.midi
     # Guide for creating midi notes
+
+    #CODE HERE IS NONFUNCTIONAL
+    obtainedThemeInfo = getThemeInfo()
+    for part in obtainedThemeInfo:
+        for info in part:
+            noteSequence[row][info[0]:info[0]+info[1]] = info[3] #This info[3] returns a themeID, may be matched to
+                                                                    #a list of themes
+
+    #All notes are created at this point, finally adding to stream
     for i in range(len(noteSequence)):
         n = note.Note(noteSequence[i])
         if noteDurations[i] == 'quarter':
@@ -64,6 +73,13 @@ def simpleFileRandomizer(file_name):
     return (s1, pitches, noteSequence)
 
 #simpleFileRandomizer('MaryHadLittleLamb.mid')
+
+def getThemeInfo():
+    """
+    Does not currently work, ideally will return a 2D array of triples, with layer 1 of the array being the part
+    and the values in those nested arrays be triples that are (indexLocation, length, themeID)
+    """
+    themeInfo = []
 
 def getMelodyPart(file_name):
     pass
@@ -152,3 +168,35 @@ def getPartsTest():
 
 getPartsTest()
 #getPartsInfo('SummerNo3.mid')
+
+def find_theme(notes):
+    """
+    David's algorithim for identifying the theme in a given list of notes
+    """
+    # print len(notes), notes
+    def print_grid(grid):
+        print numpy.matrix(grid)
+    def get(r, c, grid):
+        if 0 <= r < len(grid) and 0 <= c < len(grid[0]):
+            return grid[r][c]
+        else:
+            return 0
+    lookup_table = [[0 for j in xrange(len(notes))] for i in xrange(len(notes))]
+    for row in xrange(len(lookup_table)):
+        for column in xrange(len(lookup_table[row])):
+            max_of_neighbors = max(
+                get(row-1, column, lookup_table),
+                get(row, column-1, lookup_table)
+            )
+            if row != column and notes[row] == notes[column]:
+                lookup_table[row][column] = 1 + get(row-1, column-1, lookup_table)
+            else:
+                lookup_table[row][column] = max_of_neighbors
+    theme_notes = []
+    current = 0
+    for index in xrange(len(notes)):
+        if lookup_table[~0][index] > current:
+            theme_notes.append(notes[index])
+            current += 1
+    # print_grid(lookup_table)
+    return theme_notes
