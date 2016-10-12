@@ -13,12 +13,15 @@ PENALTY_HISTORY = 8
 # 1.0 - never repeat a note
 # 0.5 - 50% of the normal probability for a note
 # 0.0 - normal probability for a note
-PENALTY_STRICTNESS = 0.8
+PENALTY_STRICTNESS = 1.0
 
 # Amount that the penalty changes as the note gets further
 # away from the current note:
 # 0.1 - strictness decreases by 0.1 for every note
 PENALTY_MODIFIER = 0.1
+
+# The multiplier on every note in the melody
+THEME_WEIGHT = 1.5
 
 s1 = stream.Stream()
 
@@ -65,6 +68,7 @@ def writeGoodHarmony(melStream):
         randChord = random.randint(0,2) - 1 #-1, 0, or 1
         harmonyName = cMaj[(cMaj.index(currentNote.name) + randChord*2)%8] #up a third, down a third, or same note
         harmonyNote = note.Note(harmonyName + '3') #makes it more'bass'
+        harmonyNote.duration = currentNote.duration
         harmonyLine.append(harmonyNote)
     melodyLine = stream.Score()
     melodyLine.append(melStream)
@@ -90,94 +94,105 @@ def divideDictBy(dividingDict, divisor):
     return dictCopy
 
 def simpleFileRandomizer(file_name):
-    songFile = getThemes(file_name)
-    pitches = []
-    noteDurations = []
-    for n in songFile: # Type is <class 'music21.note.Note'>
-        noteDurations.append(n.duration.type)
-        # assumes n is a single note
-        pitches.append(n.nameWithOctave)
-    # print(noteDurations)
-    # print(pitches)
-    uniquePitches = []
-    for n in pitches: # Creates a list containing all of the unique notes in the midi
-        if n not in uniquePitches:
-            uniquePitches.append(n)
-    # print(uniquePitches)
+    songFile = get_notes(file_name)
 
-    # Pitch frequencies are recorded in a dictionary of dictionaries
-    # Each note has a dictionary of all the notes that follow it mapped to the probability
-    pitchFrequencies = {}
-    for pitch in uniquePitches:
-        pitchFrequencies[pitch] = {}
+    themes = getThemes(file_name)
 
-    # Adds notes into the corresponding dictionaries, just by count for looping
-    for i in range(len(pitches)-1):
-        pitchMap = pitchFrequencies[pitches[i]]
+    for part in songFile.values():
+        print part
+        uniquePitches = []
 
-        pitchMap[pitches[i+1]] = pitchMap.get(pitches[i+1], 0) + 1
+        for n in part[0]: # Creates a list containing all of the unique notes in the midi
+            if n not in uniquePitches:
+                uniquePitches.append(n)
+        # print(uniquePitches)
 
-    # Generate default probabilities for each note/following note pair
-    for pitch, pitchMap in pitchFrequencies.items():
-        pitchFrequencies[pitch] = divideDictBy(pitchMap, sum(pitchMap.values()))
+        # Pitch frequencies are recorded in a dictionary of dictionaries
+        # Each note has a dictionary of all the notes that follow it mapped to the probability
+        pitchFrequencies = {}
+        for pitch in uniquePitches:
+            print pitch
+            pitchFrequencies[pitch] = {}
 
-    noteSequence = []
-    for i in range(len(pitches)):
-        if i == 0:
-            noteSequence.append(pitches[i])
-        else:
-            precedingNote = noteSequence[i-1]
+        # Adds notes into the corresponding dictionaries, just by count for looping
+        for i in range(len(part[0])-1):
+            pitchMap = pitchFrequencies[part[0][i]]
 
-            # Create a new probability map for the current state
-            pitchMap = dict(pitchFrequencies[precedingNote])
-            for noteName, probability in pitchMap.items():
-                # Loop over past notes
-                for j in xrange(0, PENALTY_HISTORY):
-                    # Get the note to compare to
-                    checkIndex = i - 1 - j
+            pitchMap[part[0][i+1]] = pitchMap.get(part[0][i+1], 0) + 1
 
-                    # Check for a valid index
-                    if checkIndex < 0:
+        # Generate default probabilities for each note/following note pair
+        for pitch, pitchMap in pitchFrequencies.items():
+
+            # Make the theme have a higher chance of being played
+            for themeNote in themes:
+                for randomPitch, count in pitchMap.items():
+                    if randomPitch == themeNote.nameWithOctave:
+                        pitchMap[randomPitch] = pitchMap[themeNote.nameWithOctave] * THEME_WEIGHT
                         break
 
-                    # Update the probabilities if we are repeating a note
-                    if noteName == noteSequence[i - 1 - j]:
-                        probabilityModifier = min(1, max(0, (1 - PENALTY_STRICTNESS) + j * PENALTY_MODIFIER))
+            pitchFrequencies[pitch] = divideDictBy(pitchMap, sum(pitchMap.values()))
 
-                        pitchMap[noteName] *= probabilityModifier
+        print pitchFrequencies
 
-            probabilitySum = sum(pitchMap.values())
-
-            if probabilitySum == 0:
-                # No valid note from the probabilities, just choose a random note
-                nextNote = uniquePitches[random.randint(0, len(uniquePitches) - 1)]
+        noteSequence = []
+        for i in xrange(len(part[0])):
+            if i == 0:
+                noteSequence.append(part[0][i])
             else:
-                targetRandom = random.random()
-                previousSum = 0
+                precedingNote = noteSequence[i-1]
 
-                # Weight the probabilities correctly
-                tempProbList = divideDictBy(pitchMap, probabilitySum)
+                # Create a new probability map for the current state
+                pitchMap = dict(pitchFrequencies[precedingNote])
+                for noteName, probability in pitchMap.items():
+                    # Loop over past notes
+                    for j in xrange(0, PENALTY_HISTORY):
+                        # Get the note to compare to
+                        checkIndex = i - 1 - j
 
-                # Get the next note from probabilities
-                for noteName, probability in tempProbList.items():
-                    previousSum += probability
-                    if targetRandom < previousSum:
-                        nextNote = noteName
-                        break
+                        # Check for a valid index
+                        if checkIndex < 0:
+                            break
 
-            noteSequence.append(nextNote)
-    # print(noteSequence)
-    # http://web.mit.edu/music21/doc/moduleReference/modulePitch.html#music21.pitch.Pitch.midi
-    # Guide for creating midi notes
-    for i in range(len(noteSequence)):
-        n = note.Note(noteSequence[i])
-        if noteDurations[i] == 'quarter':
-            n.duration = quartDuration
-        elif noteDurations[i] == 'half':
-            n.duration = halfDuration
-        s1.append(n)
+                        # Update the probabilities if we are repeating a note
+                        if noteName == noteSequence[i - 1 - j]:
+                            probabilityModifier = min(1, max(0, (1 - PENALTY_STRICTNESS) + j * PENALTY_MODIFIER))
 
-    writeGoodHarmony(s1)
+                            pitchMap[noteName] *= probabilityModifier
 
-simpleFileRandomizer('MaryHadLittleLamb.mid')
-#simpleFileRandomizer('A_Farewell_to_a_Promised_Today.mid')
+                probabilitySum = sum(pitchMap.values())
+
+                if probabilitySum == 0:
+                    # No valid note from the probabilities, just choose a random note
+                    nextNote = uniquePitches[random.randint(0, len(uniquePitches) - 1)]
+                else:
+                    targetRandom = random.random()
+                    previousSum = 0
+
+                    # Weight the probabilities correctly
+                    tempProbList = divideDictBy(pitchMap, probabilitySum)
+
+                    # Get the next note from probabilities
+                    for noteName, probability in tempProbList.items():
+                        previousSum += probability
+                        if targetRandom < previousSum:
+                            nextNote = noteName
+                            break
+
+                noteSequence.append(nextNote)
+
+        # print(noteSequence)
+        # http://web.mit.edu/music21/doc/moduleReference/modulePitch.html#music21.pitch.Pitch.midi
+        # Guide for creating midi notes
+        for i in range(len(noteSequence)):
+            n = note.Note(str(noteSequence[i]))
+            n.duration = part[1][i]
+            s1.append(n)
+
+    if len(songFile) == 1:
+        writeGoodHarmony(s1)
+    else:
+        s1.show()
+
+
+simpleFileRandomizer('songs\\mary.mid')
+#simpleFileRandomizer('songs\\autumn_no1_allegro_gp.mid')
