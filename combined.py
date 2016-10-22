@@ -73,7 +73,7 @@ def writeGoodHarmony(melStream, file_name):
     melodyLine = stream.Score()
     melodyLine.append(melStream)
     melodyLine.append(harmonyLine)
-    fp = melodyLine.write('midi', fp='/home/andy/Desktop/VariationsOnATheme/variations-on-a-theme/toDownload/'+file_name)
+    fp = melodyLine.write('midi', fp='/home/ec2-user/variations-on-a-theme/toDownload/'+file_name)
     #return '/home/andy/Desktop/VariationsOnATheme/variations-on-a-theme/toDownload/' + file_name
 
 def scaleToNotes(changeScale, key):
@@ -192,7 +192,7 @@ def simpleFileRandomizer(file_name):
     if len(songFile) == 1:
         writeGoodHarmony(s1, file_name)
     else:
-        fp = s1.write('midi', fp='/home/andy/Desktop/VariationsOnATheme/variations-on-a-theme/toDownload/'+file_name)
+        fp = s1.write('midi', fp='/home/ec2-user/variations-on-a-theme/toDownload/'+file_name)
         #return '/home/andy/Desktop/VariationsOnATheme/variations-on-a-theme/toDownload/'+file_name
 
 #simpleFileRandomizer('MaryHadLittleLamb.mid')

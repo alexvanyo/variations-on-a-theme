@@ -5,8 +5,8 @@ from werkzeug import secure_filename
 
 app = Flask(__name__)
 
-app.config['UPLOAD_FOLDER'] = '/home/andy/Desktop/VariationsOnATheme/variations-on-a-theme/uploads/'
-app.config['DOWNLOAD_FOLDER'] = '/home/andy/Desktop/VariationsOnATheme/variations-on-a-theme/toDownload/'
+app.config['UPLOAD_FOLDER'] = '/home/ec2-user/variations-on-a-theme/uploads'
+app.config['DOWNLOAD_FOLDER'] = '/home/ec2-user/variations-on-a-theme/toDownload/'
 app.config['ALLOWED_EXTENSIONS'] = set(['mid'])
 
 def allowed_file(filename):
