@@ -60,7 +60,7 @@ def getThemes(file_name):
         if len(myStream.pitches) != 0:
             return myStream
 
-def writeGoodHarmony(melStream):
+def writeGoodHarmony(melStream, file_name):
     harmonyLine = stream.Part()
     cMaj = scaleToNotes(scale.MajorScale('c'), 'c') #notes of a c major scale
 
@@ -73,7 +73,8 @@ def writeGoodHarmony(melStream):
     melodyLine = stream.Score()
     melodyLine.append(melStream)
     melodyLine.append(harmonyLine)
-    melodyLine.show()
+    fp = melodyLine.write('midi', fp='/home/andy/Desktop/VariationsOnATheme/variations-on-a-theme/toDownload/'+file_name)
+    #return '/home/andy/Desktop/VariationsOnATheme/variations-on-a-theme/toDownload/' + file_name
 
 def scaleToNotes(changeScale, key):
     """
@@ -189,10 +190,11 @@ def simpleFileRandomizer(file_name):
             s1.append(n)
 
     if len(songFile) == 1:
-        writeGoodHarmony(s1)
+        writeGoodHarmony(s1, file_name)
     else:
-        s1.show()
+        fp = s1.write('midi', fp='/home/andy/Desktop/VariationsOnATheme/variations-on-a-theme/toDownload/'+file_name)
+        #return '/home/andy/Desktop/VariationsOnATheme/variations-on-a-theme/toDownload/'+file_name
 
-
-simpleFileRandomizer('songs\\mary.mid')
+#simpleFileRandomizer('MaryHadLittleLamb.mid')
+#simpleFileRandomizer('songs\\mary.mid')
 #simpleFileRandomizer('songs\\autumn_no1_allegro_gp.mid')
