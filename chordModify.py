@@ -4,7 +4,7 @@ import random
 def writeGoodHarmony(fileName):
     melodyLine = converter.parse(fileName)
     harmonyLine = stream.Part()
-    cMaj = scaleToNotes(scale.MajorScale('c'), 'c') #notes of a c major scale
+    cMaj = scaleToNotes(scale.MajorScale('c#'), 'c#') #notes of a c major scale
 
     for currentNote in melodyLine.parts[0].notes:
         randChord = random.randint(0,2) - 1 #-1, 0, or 1
@@ -39,7 +39,4 @@ def scaleToNotes(changeScale, key):
         scaleNotes.append(note.Note(currentPitch).name)
 
     return scaleNotes
-
-writeGoodHarmony('mary.mid')
-writeBadHarmony('mary.mid')
-
+print scaleToNotes(scale.MajorScale('c#'), 'c#')
