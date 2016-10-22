@@ -1,9 +1,8 @@
 from music21 import *
 
 nekedMelody = converter.parse('mary.mid')
-nekedMelody.show()
 melody = nekedMelody.makeMeasures()
-#melody.show('text')
+melody.show('text')
 
 def getMajorScale(tonic):
     scale = []
@@ -12,7 +11,8 @@ def getMajorScale(tonic):
     return scale
 
 def getDuration(thisNote):
-    return duration.convertTypeToNumber(thisNote.duration.type)
+    print thisNote.duration.quarterLength
+    return thisNote.duration.quarterLength#duration.convertTypeToNumber(thisNote.duration.type)
 def getKey():
     """
     simple key identifier, though assumes ALL notes are in the key, if key not
@@ -45,6 +45,7 @@ def getKey():
 def createChords(scale):
     chords = stream.Part()
     for measure in melody:
+        i = 0
         for i in range(len(measure)):
             if type(measure[i]) is note.Note:
                 if measure[i].pitch.pitchClass in scale:
@@ -56,30 +57,29 @@ def createChords(scale):
                     fifth = pitch.Pitch(scale[(scaleDeg+4)%7])
                     fifth.octave = 3
                     newChord = chord.Chord([root,third,fifth])
-                    chordLen = measure[i].duration
+                    chordLen = getDuration(measure[i])#measure[i].duration
                     """
                     i += 1
-                    while i < len(measure):
+                    for i in range(len(measure)):
                         if type(measure[i]) is note.Note:
-                            print abs(scale[scaleDeg] - measure[i].pitch.pitchClass)
+                            #print abs(scale[scaleDeg] - measure[i].pitch.pitchClass)
                             if abs(scale[scaleDeg] - measure[i].pitch.pitchClass) <= 2:
                                 chordLen += getDuration(measure[i])
-                                print chordLen
+                                #print chordLen
                                 i += 1
                             else:
                                 i -= 1
+                                print 'broken af'
                                 break
-                                print 'didnt'
+                    print chordLen, newChord
                     """
-                    #chordDuration = duration.Duration(chordLen)
-                    newChord.duration = chordLen
+                    newChord.duration = duration.Duration(chordLen)
                     chords.append(newChord)
+
     return chords
 
 print getMajorScale(getKey())
-finalScore = stream.Score()
-finalScore.insert(0,converter.parse('mary.mid'))
-finalScore.insert(1,createChords(getMajorScale(getKey())))
 
+nekedMelody.append(createChords(getMajorScale(getKey())))
 
-finalScore.show()
+nekedMelody.show()
