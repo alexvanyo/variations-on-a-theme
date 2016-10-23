@@ -60,7 +60,7 @@ def getThemes(file_name):
         if len(myStream.pitches) != 0:
             return myStream
 
-def writeGoodHarmony(melStream, file_name):
+def writeGoodHarmony(melStream, file_name, local):
     harmonyLine = stream.Part()
     cMaj = scaleToNotes(scale.MajorScale('c'), 'c') #notes of a c major scale
 
@@ -73,7 +73,11 @@ def writeGoodHarmony(melStream, file_name):
     melodyLine = stream.Score()
     melodyLine.append(melStream)
     melodyLine.append(harmonyLine)
-    fp = melodyLine.write('midi', fp='/home/ec2-user/variations-on-a-theme/toDownload/'+file_name)
+    if local:
+        print "got to file write"
+        fp = melodyLine.write('midi', fp='/home/andy/Desktop/VariationsOnATheme/variations-on-a-theme/toDownload/' + file_name)
+    else:
+        fp = melodyLine.write('midi', fp='/home/ec2-user/variations-on-a-theme/toDownload/' + file_name)
     #return '/home/andy/Desktop/VariationsOnATheme/variations-on-a-theme/toDownload/' + file_name
 
 def scaleToNotes(changeScale, key):
@@ -94,7 +98,7 @@ def divideDictBy(dividingDict, divisor):
 
     return dictCopy
 
-def simpleFileRandomizer(file_name):
+def simpleFileRandomizer(file_name, local):
     songFile = get_notes(file_name)
 
     themes = getThemes(file_name)
@@ -192,9 +196,13 @@ def simpleFileRandomizer(file_name):
     if len(songFile) == 1:
         writeGoodHarmony(s1, file_name)
     else:
-        fp = s1.write('midi', fp='/home/ec2-user/variations-on-a-theme/toDownload/'+file_name)
+        if local:
+            print "Got to file write"
+            fp = s1.write('midi', fp='/home/andy/Desktop/VariationsOnATheme/variations-on-a-theme/toDownload/' + file_name)
+        else:
+            fp = s1.write('midi', fp='/home/ec2-user/variations-on-a-theme/toDownload/' + file_name)
         #return '/home/andy/Desktop/VariationsOnATheme/variations-on-a-theme/toDownload/'+file_name
 
-#simpleFileRandomizer('Mary.mid')
+#simpleFileRandomizer('/home/andy/Desktop/VariationsOnATheme/variations-on-a-theme/uploads/Mary.mid', True)
 #simpleFileRandomizer('songs\\mary.mid')
 #simpleFileRandomizer('songs\\autumn_no1_allegro_gp.mid')
