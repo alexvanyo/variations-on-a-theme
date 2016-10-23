@@ -23,7 +23,6 @@ def upload():
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename) #filename is type str
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        print app.config['UPLOAD_FOLDER'] + filename
         simpleFileRandomizer(app.config['UPLOAD_FOLDER'] + filename)
         return redirect(url_for('uploaded_file', filename=filename))
 
