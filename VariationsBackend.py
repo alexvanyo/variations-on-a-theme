@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, url_for, send_from_directory, render_template
+from flask import Flask, flash, request, redirect, url_for, send_from_directory, render_template
 import music21, os
 from combined import simpleFileRandomizer
 from werkzeug import secure_filename
@@ -23,6 +23,7 @@ def upload():
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename) #filename is type str
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        print app.config['UPLOAD_FOLDER'] + filename
         simpleFileRandomizer(app.config['UPLOAD_FOLDER'] + filename)
         return redirect(url_for('uploaded_file', filename=filename))
 
