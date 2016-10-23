@@ -195,6 +195,6 @@ def simpleFileRandomizer(file_name):
         fp = s1.write('midi', fp='/home/ec2-user/variations-on-a-theme/toDownload/'+file_name)
         #return '/home/andy/Desktop/VariationsOnATheme/variations-on-a-theme/toDownload/'+file_name
 
-#simpleFileRandomizer('MaryHadLittleLamb.mid')
+simpleFileRandomizer('Mary.mid')
 #simpleFileRandomizer('songs\\mary.mid')
 #simpleFileRandomizer('songs\\autumn_no1_allegro_gp.mid')
