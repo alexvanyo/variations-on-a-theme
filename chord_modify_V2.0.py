@@ -5,14 +5,22 @@ melody = nekedMelody.makeMeasures()
 melody.show('text')
 
 def getMajorScale(tonic):
+    """
+    given the root/key, return pitchClasses of said key's major scale
+    """
     scale = []
     for note in tonic.pitches:
         scale.append(note.pitchClass)
     return scale
 
+def checkEnd(someObj):
+    """
+    given an object, check if it is the final Barline
+    """
+    return type(someObj) is bar.Barline and thisObj.style == final
+
 def getDuration(thisNote):
-    print thisNote.duration.quarterLength
-    return thisNote.duration.quarterLength#duration.convertTypeToNumber(thisNote.duration.type)
+    return thisNote.duration.quarterLength
 def getKey():
     """
     simple key identifier, though assumes ALL notes are in the key, if key not
@@ -46,10 +54,11 @@ def createChords(scale):
     chords = stream.Part()
     for measure in melody:
         i = 0
-        for i in range(len(measure)):
-            if type(measure[i]) is note.Note:
-                if measure[i].pitch.pitchClass in scale:
-                    scaleDeg = scale.index(measure[i].pitch.pitchClass)
+        while i < len(measure):#for i in range(len(measure)):
+            thisObj = measure[i]
+            if type(thisObj) is note.Note:
+                if thisObj.pitch.pitchClass in scale:
+                    scaleDeg = scale.index(thisObj.pitch.pitchClass)
                     root = pitch.Pitch(scale[scaleDeg])
                     root.octave = 3
                     third = pitch.Pitch(scale[(scaleDeg+2)%7])
@@ -57,25 +66,25 @@ def createChords(scale):
                     fifth = pitch.Pitch(scale[(scaleDeg+4)%7])
                     fifth.octave = 3
                     newChord = chord.Chord([root,third,fifth])
-                    chordLen = getDuration(measure[i])#measure[i].duration
-                    """
+                    chordLen = getDuration(thisObj)
+
                     i += 1
-                    for i in range(len(measure)):
-                        if type(measure[i]) is note.Note:
-                            #print abs(scale[scaleDeg] - measure[i].pitch.pitchClass)
-                            if abs(scale[scaleDeg] - measure[i].pitch.pitchClass) <= 2:
+                    while i < len(measure):#for i in range(len(measure)):
+                        nextObj = measure[i]
+                        if type(nextObj) is note.Note:
+                            if abs(scale[scaleDeg] - nextObj.pitch.pitchClass) <= 2:
                                 chordLen += getDuration(measure[i])
-                                #print chordLen
                                 i += 1
                             else:
                                 i -= 1
-                                print 'broken af'
                                 break
-                    print chordLen, newChord
-                    """
+                        else:
+                            i -= 1
+                            break
+
                     newChord.duration = duration.Duration(chordLen)
                     chords.append(newChord)
-
+            i+=1
     return chords
 
 print getMajorScale(getKey())
