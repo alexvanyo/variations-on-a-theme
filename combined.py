@@ -99,6 +99,7 @@ def divideDictBy(dividingDict, divisor):
     return dictCopy
 
 def simpleFileRandomizer(file_name, local):
+    print file_name
     songFile = get_notes(file_name)
 
     themes = getThemes(file_name)
