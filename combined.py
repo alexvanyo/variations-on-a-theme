@@ -23,7 +23,7 @@ PENALTY_MODIFIER = 0.1
 # The multiplier on every note in the melody
 THEME_WEIGHT = 1.5
 
-s1 = stream.Stream()
+s1 = stream.Score()
 
 def get_notes(file_name):
     song_file = converter.parse(file_name)
@@ -105,6 +105,8 @@ def simpleFileRandomizer(file_name, local):
     themes = getThemes(file_name)
 
     for part in songFile.values():
+        part_stream = stream.Part()
+
         print part
         uniquePitches = []
 
@@ -192,7 +194,9 @@ def simpleFileRandomizer(file_name, local):
         for i in range(len(noteSequence)):
             n = note.Note(str(noteSequence[i]))
             n.duration = part[1][i]
-            s1.append(n)
+            part_stream.append(n)
+
+        s1.insert(0, part_stream)
 
     if len(songFile) == 1:
         writeGoodHarmony(s1, file_name)
