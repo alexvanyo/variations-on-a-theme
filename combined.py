@@ -78,7 +78,7 @@ def writeGoodHarmony(melStream, file_name, local):
         fp = melodyLine.write('midi', fp='/home/andy/Desktop/VariationsOnATheme/variations-on-a-theme/toDownload/' + actual_filename)
     else:
         actual_filename = file_name[45:]
-        fp = melodyLine.write('midi', fp='/home/ec2-user/variations-on-a-theme/toDownload/' + actual_filename+)
+        fp = melodyLine.write('midi', fp='/home/ec2-user/variations-on-a-theme/toDownload/' + actual_filename)
     #return '/home/andy/Desktop/VariationsOnATheme/variations-on-a-theme/toDownload/' + file_name
 
 def scaleToNotes(changeScale, key):
