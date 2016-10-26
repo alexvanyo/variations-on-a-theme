@@ -73,10 +73,11 @@ def writeGoodHarmony(melStream, file_name, local):
     melodyLine = stream.Score()
     melodyLine.append(melStream)
     melodyLine.append(harmonyLine)
-    actual_filename = file_name[68:]
     if local:
+        actual_filename = file_name[68:]
         fp = melodyLine.write('midi', fp='/home/andy/Desktop/VariationsOnATheme/variations-on-a-theme/toDownload/' + actual_filename)
     else:
+        actual_filename = file_name[45:]
         fp = melodyLine.write('midi', fp='/home/ec2-user/variations-on-a-theme/toDownload/' + actual_filename)
     #return '/home/andy/Desktop/VariationsOnATheme/variations-on-a-theme/toDownload/' + file_name
 
@@ -99,7 +100,6 @@ def divideDictBy(dividingDict, divisor):
     return dictCopy
 
 def simpleFileRandomizer(file_name, local):
-    print file_name
     songFile = get_notes(file_name)
 
     themes = getThemes(file_name)
@@ -197,10 +197,11 @@ def simpleFileRandomizer(file_name, local):
     if len(songFile) == 1:
         writeGoodHarmony(s1, file_name)
     else:
-        actual_filename = file_name[68:]
         if local:
+            actual_filename = file_name[68:]
             fp = s1.write('midi', fp='/home/andy/Desktop/VariationsOnATheme/variations-on-a-theme/toDownload/' + actual_filename)
         else:
+            actual_filename = file_name[45:]
             fp = s1.write('midi', fp='/home/ec2-user/variations-on-a-theme/toDownload/' + actual_filename)
         #return '/home/andy/Desktop/VariationsOnATheme/variations-on-a-theme/toDownload/'+file_name
 
