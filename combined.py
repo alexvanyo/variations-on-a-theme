@@ -73,11 +73,11 @@ def writeGoodHarmony(melStream, file_name, local):
     melodyLine = stream.Score()
     melodyLine.append(melStream)
     melodyLine.append(harmonyLine)
+    actual_filename = file_name[68:]
     if local:
-        print "got to file write"
-        fp = melodyLine.write('midi', fp='/home/andy/Desktop/VariationsOnATheme/variations-on-a-theme/toDownload/' + file_name)
+        fp = melodyLine.write('midi', fp='/home/andy/Desktop/VariationsOnATheme/variations-on-a-theme/toDownload/' + actual_filename)
     else:
-        fp = melodyLine.write('midi', fp='/home/ec2-user/variations-on-a-theme/toDownload/' + file_name)
+        fp = melodyLine.write('midi', fp='/home/ec2-user/variations-on-a-theme/toDownload/' + actual_filename)
     #return '/home/andy/Desktop/VariationsOnATheme/variations-on-a-theme/toDownload/' + file_name
 
 def scaleToNotes(changeScale, key):
@@ -196,13 +196,17 @@ def simpleFileRandomizer(file_name, local):
     if len(songFile) == 1:
         writeGoodHarmony(s1, file_name)
     else:
+        actual_filename = file_name[68:]
         if local:
-            print "Got to file write"
-            fp = s1.write('midi', fp='/home/andy/Desktop/VariationsOnATheme/variations-on-a-theme/toDownload/' + file_name)
+            fp = s1.write('midi', fp='/home/andy/Desktop/VariationsOnATheme/variations-on-a-theme/toDownload/' + actual_filename)
         else:
-            fp = s1.write('midi', fp='/home/ec2-user/variations-on-a-theme/toDownload/' + file_name)
+            fp = s1.write('midi', fp='/home/ec2-user/variations-on-a-theme/toDownload/' + actual_filename)
         #return '/home/andy/Desktop/VariationsOnATheme/variations-on-a-theme/toDownload/'+file_name
 
 #simpleFileRandomizer('/home/andy/Desktop/VariationsOnATheme/variations-on-a-theme/uploads/Mary.mid', True)
-#simpleFileRandomizer('songs\\mary.mid')
+#simpleFileRandomizer('songs\\mary.mid') #38
 #simpleFileRandomizer('songs\\autumn_no1_allegro_gp.mid')
+
+#filename = "/home/andy/Desktop/VariationsOnATheme/variations-on-a-theme/uploads/Mary.mid"
+#print filename[:60]
+#print filename[68:]
