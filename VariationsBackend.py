@@ -35,5 +35,5 @@ def uploaded_file(filename):
     return send_from_directory(app.config['DOWNLOAD_FOLDER'], filename)
 
 if __name__ == '__main__':
-    #app.run(host = '0.0.0.0', port=80)
-    app.run()
+    app.run(host = '0.0.0.0', port=80)
+    #app.run()
