@@ -18,7 +18,7 @@ def allowed_file(filename):
 def index():
     return render_template('index.html')
 
-@app.route('/upload', methods=['POST'])
+@app.route('/uploads', methods=['POST'])
 def upload():
     file = request.files['file'] #Type <class 'werkzeug.datastructures.FileStorage'>
     if file and allowed_file(file.filename):

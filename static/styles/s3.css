@@ -1,0 +1,72 @@
+body {
+  background-image: url(b.png);
+  background-repeat: no-repeat;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  background-size: 100% 100%;
+  color: white;
+  font-family: ‘Palatino Linotype’, ‘Book Antiqua’, Palatino, serif;
+}
+
+html {
+    height: 100%;
+}
+
+h3 {
+  position: absolute;
+  top: 50px;
+  right: 30px;
+  font-size: 34px;
+}
+
+.inputFile {
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+.custom-file-upload {
+    border: 1px solid #ccc;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    position: absolute;
+    top: 250px;
+    right: 200px;
+    cursor: pointer;
+    background-color: transparent;
+    width: 80px;
+    height: 16px;
+    overflow: hidden;
+}
+
+.buttonSubmit {
+    border: 1px solid #ccc;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    position: absolute;
+    top: 250px;
+    right: 30px;
+    cursor: pointer;
+    background-color: transparent;
+    width: 150px;
+    height: 48px;
+}
+
+.custom-file-upload:hover {
+    background-color: lightslategray;
+}
+
+.buttonSubmit:hover {
+    background-color: lightslategray;
+}
