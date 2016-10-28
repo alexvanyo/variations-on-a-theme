@@ -23,8 +23,6 @@ PENALTY_MODIFIER = 0.1
 # The multiplier on every note in the melody
 THEME_WEIGHT = 1.5
 
-s1 = stream.Score()
-
 def get_notes(file_name):
     song_file = converter.parse(file_name)
     parts = {}
@@ -94,6 +92,8 @@ def divideDictBy(dividingDict, divisor):
     return dictCopy
 
 def simpleFileRandomizer(file_name):
+    s1 = stream.Score()
+
     songFile = get_notes(file_name)
 
     themes = getThemes(file_name)
