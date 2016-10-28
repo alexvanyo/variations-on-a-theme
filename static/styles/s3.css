@@ -1,11 +1,7 @@
 body {
   background-image: url(b.png);
   background-repeat: no-repeat;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
   background-size: cover;
-  background-size: 100% 100%;
   color: white;
   font-family: ‘Palatino Linotype’, ‘Book Antiqua’, Palatino, serif;
 }
@@ -15,17 +11,25 @@ html {
 }
 
 h3 {
-  position: absolute;
-  top: 50px;
-  right: 30px;
-  font-size: 34px;
+  margin-left:115px;
+  margin-top: 200px;
+  font-size: 30px;
+  position: fixed;
+}
+
+.container {
+  border: 1px solid transparent;
+  width: 500px;
+  height: 650px;
+  -webkit-transform: translate3d(0, 0, 0);
+  margin-left: 750px;
+
 }
 
 .inputFile {
 	opacity: 0;
-	overflow: hidden;
-	position: absolute;
 	z-index: -1;
+  width: 0px;
 }
 
 .custom-file-upload {
@@ -34,16 +38,15 @@ h3 {
     padding: 15px 32px;
     text-align: center;
     text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    position: absolute;
-    top: 250px;
-    right: 200px;
+    font-size: 13px;
+    margin-left:100px;
+    margin-top: 300px;
     cursor: pointer;
     background-color: transparent;
     width: 80px;
     height: 16px;
-    overflow: hidden;
+    display:block;
+    vertical-align: middle;
 }
 
 .buttonSubmit {
@@ -52,15 +55,15 @@ h3 {
     padding: 15px 32px;
     text-align: center;
     text-decoration: none;
-    display: inline-block;
     font-size: 16px;
-    position: absolute;
-    top: 250px;
-    right: 30px;
+    font-size: 13px;
+    margin-left:300px;
+    margin-top: -66px;
     cursor: pointer;
     background-color: transparent;
     width: 150px;
     height: 48px;
+    display:block;
 }
 
 .custom-file-upload:hover {
