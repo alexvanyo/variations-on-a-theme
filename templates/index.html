@@ -3,16 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Variations on a Theme</title>
-    <style>
-      * {
-      }
-      body {
-        background-image: url('background.jpeg');
-
-        color: crimson;
-
-      }
-    </style>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
 </head>
 <body>
     <div class = "container">
@@ -20,7 +11,6 @@
             <h3 class="text-muted">Variations on a Theme</h3>
         </div>
         <div>
-
         <form action="upload" method = "post"  enctype = "multipart/form-data">
             <input type="file" name="file"><br /><br />
             <input type="submit" value="Variate!">
