@@ -26,13 +26,20 @@ def upload():
         filename = secure_filename(file.filename) #filename is type str
         filename = filename[:len(filename)-4] + curTime + '.mid'
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        randomizedSong = simpleFileRandomizer(app.config['UPLOAD_FOLDER'] + filename)
+        try:
+            randomizedSong = simpleFileRandomizer(app.config['UPLOAD_FOLDER'] + filename)
+        except TypeError:
+            return redirect(url_for('variate_error'))
         fp = randomizedSong.write('midi', fp=app.config['DOWNLOAD_FOLDER'] + filename)
         return redirect(url_for('uploaded_file', filename=filename))
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['DOWNLOAD_FOLDER'], filename)
+
+@app.route('/error/')
+def variate_error():
+    return "Cannot process this file, please choose another"
 
 if __name__ == '__main__':
     app.run(host = '0.0.0.0', port=80)
