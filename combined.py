@@ -29,13 +29,13 @@ def get_notes(file_name):
     for part in song_file.parts:
         pitches = []
         note_durations = []
-        for thisNote in part.flat.notes:
+        for thisNote in part.flat.notesAndRests:
             if type(thisNote) == chord.Chord:
                 pitches.append(thisNote.pitchNames)
             elif type(thisNote) == note.Note:
                 pitches.append(thisNote.nameWithOctave)
             elif type(thisNote) == note.Rest:
-                pitches.append(thisNote.fullName)
+                pitches.append("rest")
             note_durations.append(thisNote.duration)
         parts[part] = pitches, note_durations
     return parts
@@ -48,7 +48,9 @@ def getThemes(file_name):
         myStream = stream.Stream()
         theme = find_theme(zip(notes, note_durations))
         for noise in theme:
-            if type(noise[0]) == list:
+            if noise[0] == "rest":
+                thisNote = note.Rest()
+            elif type(noise[0]) == list:
                 thisNote = chord.Chord(noise[0])
             else:
                 # print noise
@@ -63,11 +65,17 @@ def writeGoodHarmony(melStream):
     cMaj = scaleToNotes(scale.MajorScale('c'), 'c') #notes of a c major scale
 
     for currentNote in melStream:
-        randChord = random.randint(0,2) - 1 #-1, 0, or 1
-        harmonyName = cMaj[(cMaj.index(currentNote.name) + randChord*2)%8] #up a third, down a third, or same note
-        harmonyNote = note.Note(harmonyName + '3') #makes it more'bass'
+        if type(currentNote) == note.Rest:
+            harmonyNote = note.Rest()
+
+        else:
+            randChord = random.randint(0,2) - 1 #-1, 0, or 1
+            harmonyName = cMaj[(cMaj.index(currentNote.name) + randChord*2)%8] #up a third, down a third, or same note
+            harmonyNote = note.Note(harmonyName + '3') #makes it more'bass'
+
         harmonyNote.duration = currentNote.duration
         harmonyLine.append(harmonyNote)
+
     melodyLine = stream.Score()
     melodyLine.append(melStream)
     melodyLine.append(harmonyLine)
@@ -127,10 +135,11 @@ def simpleFileRandomizer(file_name):
 
             # Make the theme have a higher chance of being played
             for themeNote in themes:
-                for randomPitch, count in pitchMap.items():
-                    if randomPitch == themeNote.nameWithOctave:
-                        pitchMap[randomPitch] = pitchMap[themeNote.nameWithOctave] * THEME_WEIGHT
-                        break
+                if themeNote.name != "rest":
+                    for randomPitch, count in pitchMap.items():
+                        if randomPitch == themeNote.nameWithOctave:
+                            pitchMap[randomPitch] = pitchMap[themeNote.nameWithOctave] * THEME_WEIGHT
+                            break
 
             pitchFrequencies[pitch] = divideDictBy(pitchMap, sum(pitchMap.values()))
 
@@ -138,7 +147,9 @@ def simpleFileRandomizer(file_name):
 
         noteSequence = []
         for i in xrange(len(part[0])):
-            if i == 0:
+            if part[0][i] == "rest":
+                noteSequence.append("rest")
+            elif i == 0:
                 noteSequence.append(part[0][i])
             else:
                 precedingNote = noteSequence[i-1]
@@ -186,14 +197,17 @@ def simpleFileRandomizer(file_name):
         # http://web.mit.edu/music21/doc/moduleReference/modulePitch.html#music21.pitch.Pitch.midi
         # Guide for creating midi notes
         for i in range(len(noteSequence)):
-            n = note.Note(str(noteSequence[i]))
+            if noteSequence[i] == "rest":
+                n = note.Rest()
+            else:
+                n = note.Note(str(noteSequence[i]))
             n.duration = part[1][i]
             part_stream.append(n)
 
         s1.insert(0, part_stream)
 
     if len(songFile) == 1:
-        writeGoodHarmony(s1)
+        return writeGoodHarmony(s1[0])
     else:
         return s1
 
