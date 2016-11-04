@@ -23,8 +23,6 @@ PENALTY_MODIFIER = 0.1
 # The multiplier on every note in the melody
 THEME_WEIGHT = 1.5
 
-s1 = stream.Stream()
-
 def get_notes(file_name):
     song_file = converter.parse(file_name)
     parts = {}
@@ -60,7 +58,7 @@ def getThemes(file_name):
         if len(myStream.pitches) != 0:
             return myStream
 
-def writeGoodHarmony(melStream, file_name, local):
+def writeGoodHarmony(melStream):
     harmonyLine = stream.Part()
     cMaj = scaleToNotes(scale.MajorScale('c'), 'c') #notes of a c major scale
 
@@ -73,12 +71,7 @@ def writeGoodHarmony(melStream, file_name, local):
     melodyLine = stream.Score()
     melodyLine.append(melStream)
     melodyLine.append(harmonyLine)
-    if local:
-        print "got to file write"
-        fp = melodyLine.write('midi', fp='/home/andy/Desktop/VariationsOnATheme/variations-on-a-theme/toDownload/' + file_name)
-    else:
-        fp = melodyLine.write('midi', fp='/home/ec2-user/variations-on-a-theme/toDownload/' + file_name)
-    #return '/home/andy/Desktop/VariationsOnATheme/variations-on-a-theme/toDownload/' + file_name
+    return melodyLine
 
 def scaleToNotes(changeScale, key):
     """
@@ -98,12 +91,16 @@ def divideDictBy(dividingDict, divisor):
 
     return dictCopy
 
-def simpleFileRandomizer(file_name, local):
+def simpleFileRandomizer(file_name):
+    s1 = stream.Score()
+
     songFile = get_notes(file_name)
 
     themes = getThemes(file_name)
 
     for part in songFile.values():
+        part_stream = stream.Part()
+
         print part
         uniquePitches = []
 
@@ -191,18 +188,15 @@ def simpleFileRandomizer(file_name, local):
         for i in range(len(noteSequence)):
             n = note.Note(str(noteSequence[i]))
             n.duration = part[1][i]
-            s1.append(n)
+            part_stream.append(n)
+
+        s1.insert(0, part_stream)
 
     if len(songFile) == 1:
-        writeGoodHarmony(s1, file_name)
+        writeGoodHarmony(s1)
     else:
-        if local:
-            print "Got to file write"
-            fp = s1.write('midi', fp='/home/andy/Desktop/VariationsOnATheme/variations-on-a-theme/toDownload/' + file_name)
-        else:
-            fp = s1.write('midi', fp='/home/ec2-user/variations-on-a-theme/toDownload/' + file_name)
-        #return '/home/andy/Desktop/VariationsOnATheme/variations-on-a-theme/toDownload/'+file_name
+        return s1
 
 #simpleFileRandomizer('/home/andy/Desktop/VariationsOnATheme/variations-on-a-theme/uploads/Mary.mid', True)
-#simpleFileRandomizer('songs\\mary.mid')
+#simpleFileRandomizer('songs\\mary.mid') #38
 #simpleFileRandomizer('songs\\autumn_no1_allegro_gp.mid')

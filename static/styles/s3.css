@@ -1,0 +1,75 @@
+body {
+  background-image: url(b.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: white;
+  font-family: ‘Palatino Linotype’, ‘Book Antiqua’, Palatino, serif;
+}
+
+html {
+    height: 100%;
+}
+
+h3 {
+  margin-left:115px;
+  margin-top: 200px;
+  font-size: 30px;
+  position: fixed;
+}
+
+.container {
+  border: 1px solid transparent;
+  width: 500px;
+  height: 650px;
+  -webkit-transform: translate3d(0, 0, 0);
+  margin-left: 750px;
+
+}
+
+.inputFile {
+	opacity: 0;
+	z-index: -1;
+  width: 0px;
+}
+
+.custom-file-upload {
+    border: 1px solid #ccc;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 13px;
+    margin-left:100px;
+    margin-top: 300px;
+    cursor: pointer;
+    background-color: transparent;
+    width: 80px;
+    height: 16px;
+    display:block;
+    vertical-align: middle;
+}
+
+.buttonSubmit {
+    border: 1px solid #ccc;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    font-size: 13px;
+    margin-left:300px;
+    margin-top: -66px;
+    cursor: pointer;
+    background-color: transparent;
+    width: 150px;
+    height: 48px;
+    display:block;
+}
+
+.custom-file-upload:hover {
+    background-color: lightslategray;
+}
+
+.buttonSubmit:hover {
+    background-color: lightslategray;
+}
