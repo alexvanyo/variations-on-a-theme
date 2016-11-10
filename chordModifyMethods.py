@@ -26,7 +26,7 @@ def getDuration(thisNote):
     """
     return thisNote.duration.quarterLength
 
-def getKey():
+def getKey(melody):
     """
     simple key identifier, though assumes ALL notes are in the key, if key not
     already given
@@ -78,27 +78,41 @@ def getNextChord(chordStruct, root):
 
     return None
 
-def checkChordProgression(chordStruct, root):
+def checkChordProgression(chordStruct, currChords, lastChord, currNote):
     chordNum = 0
+    compareChord = currChords[lastChord]
     for i in range(len(chordStruct)):
-        if chordStruct[i].root().pitchClass == root.pitch.pitchClass:
+        if chordStruct[i].root().pitchClass == compareChord.root().pitchClass:
             chordNum = i
 
     for interval in COMMON_PROGRESSIONS:
-        if root in chordStruct[(chordNum + interval)%7]:
+        if currNote in chordStruct[(chordNum + interval)%7]:
             return chordStruct[(chordNum + interval)%7]
+    return None
+
+def checkStartChord(chordStruct, checkNote):
+    for interval in chordStruct[0].pitches:
+        if checkNote.pitch.pitchClass == interval.pitchClass:
+            return chordStruct[0]
     return None
 
 def createChords(scale):
     chordStruct = getChordStructure(scale)
     chords = stream.Part()
+    isStart = True
+    currChord = -1 #used to keep track of the last chord index, for sake of chord progression
+
     for measure in melody:
         i = 0
         while i < len(measure):
             thisObj = measure[i]
             if type(thisObj) is note.Note:
                 if thisObj.pitch.pitchClass in scale:
-                    newChord = checkChordProgression(chordStruct, thisObj)
+                    if isStart == True:
+                        newChord = checkStartChord(chordStruct, thisObj)
+                        isStart = False
+                    else:
+                        newChord = checkChordProgression(chordStruct, chords, currChord, thisObj)
                     if newChord is None:
                         newChord = getNextChord(chordStruct, thisObj)
 
@@ -120,9 +134,10 @@ def createChords(scale):
 
                     newChord.duration = duration.Duration(chordLen)
                     chords.append(newChord)
+                    currChord += 1
             i+=1
     return chords
 
-nekedMelody.append(createChords(getMajorScale(getKey())))
+nekedMelody.append(createChords(getMajorScale(getKey(melody))))
 
 nekedMelody.show()
