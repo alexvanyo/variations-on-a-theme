@@ -31,7 +31,7 @@ def get_notes(file_name):
         note_durations = []
         for thisNote in part.flat.notesAndRests:
             if type(thisNote) == chord.Chord:
-                pitches.append(thisNote.pitchNames)
+                pitches.append(thisNote[0].nameWithOctave)
             elif type(thisNote) == note.Note:
                 pitches.append(thisNote.nameWithOctave)
             elif type(thisNote) == note.Rest:
