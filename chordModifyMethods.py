@@ -91,9 +91,8 @@ def checkChordProgression(chordStruct, currChords, lastChord, currNote):
     return None
 
 def checkStartChord(chordStruct, checkNote):
-    print checkNote, chordStruct[0]
     for interval in chordStruct[0].pitches:
-        if checkNote.pitchClass == interval.pitchClass:
+        if checkNote.pitch.pitchClass == interval.pitchClass:
             return chordStruct[0]
     return None
 
