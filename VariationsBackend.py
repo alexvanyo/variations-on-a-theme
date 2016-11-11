@@ -38,9 +38,7 @@ def upload():
                 return redirect(url_for('variate_error'))
             fp = randomizedSong.write('midi', fp=app.config['DOWNLOAD_FOLDER'] + filename)
             filenames.append(filename)
-    for file in filenames:
-        redirect(url_for('uploaded_file', filename=file))
-    return redirect(url_for('index'))
+    return render_template('upload.html', filenames=filenames)
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
@@ -49,7 +47,6 @@ def uploaded_file(filename):
 @app.route('/error/')
 def variate_error():
     return "Cannot process file(s), please try different file(s)"
-
 
 @app.route('/api/variate', methods=['POST'])
 def uploadAPI():
