@@ -54,6 +54,10 @@ def variate_error():
 def filetype_error():
     return "Improper file type, please choose an MID, MIDI, or XML file type"
 
+@app.route('/api/documentation')
+def displayAPIDocs():
+    return render_template('api_documentation.html')
+
 @app.route('/api/variate', methods=['POST'])
 def uploadAPI():
     file = request.files['files']  # Type <class 'werkzeug.datastructures.FileStorage'>
@@ -78,5 +82,5 @@ def api_error():
     return "Cannot process file(s), please try different file(s)"
 
 if __name__ == '__main__':
-    app.run(host = '0.0.0.0', port=80)
-    #app.run()
+    #app.run(host = '0.0.0.0', port=80)
+    app.run()
