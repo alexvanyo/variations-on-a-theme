@@ -38,15 +38,21 @@ def upload():
                 return redirect(url_for('variate_error'))
             fp = randomizedSong.write('midi', fp=app.config['DOWNLOAD_FOLDER'] + filename)
             filenames.append(filename)
+        else:
+            return redirect(url_for('filetype_error'))
     return render_template('upload.html', filenames=filenames)
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['DOWNLOAD_FOLDER'], filename)
 
-@app.route('/error/')
+@app.route('/error/variate')
 def variate_error():
     return "Cannot process file(s), please try different file(s)"
+
+@app.route('/error/filetype')
+def filetype_error():
+    return "Improper file type, please choose an MID, MIDI, or XML file type"
 
 @app.route('/api/variate', methods=['POST'])
 def uploadAPI():
