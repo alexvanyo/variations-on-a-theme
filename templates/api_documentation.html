@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+      <title>Variations on a Theme API Documentation</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h3 class="text-muted">Endpoints</h3>
+      </div>
+      <hr/>
+      <div>
+      There is only one endpoint for the API:
+      <ul>
+        POST /api/variate
+      </ul>
+      </div>
+        <div class="header">
+            <h3 class="text-muted">POST /api/variate</h3>
+        </div>
+      <hr/>
+        <div>
+            Users may upload a file to this endpoint under a post request.
+            <br><br>As of now users may upload files of type MIDI, MID, XML
+            <br><br>Sample code for uploading a file with the requests library below:
+      </div>
+        <pre>
+            import requests
+
+            file = "/path/to/file/file.mid"
+            url = "http://ec2-35-160-236-10.us-west-2.compute.amazonaws.com/api/variate"
+            files = {'files':open(file,"rb")}
+
+            r = requests.post(url, files=files)
+            fileURL = r.ur
+            fileEncoding = r.encoding
+            fileHeaders = r.headers
+        </pre>
+        <div>
+            In this case r is returned as a Response object. It is up to the user to get the file from the url given by the Response object r.
+            <br>How this will be done is left to the user’s discretion.
+            <br>In the event of a file processing error, the response object will return an error message as a String.
+        </div>
+    </div>
+  </body>
+</html>
