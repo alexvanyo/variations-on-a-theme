@@ -1,9 +1,11 @@
 body {
   background-image: url(b.png);
   background-repeat: no-repeat;
-  background-size: cover;
   color: white;
   font-family: ‘Palatino Linotype’, ‘Book Antiqua’, Palatino, serif;
+  position: fixed;
+  background-size: : 100% 100%;
+  top: 0; right: 0; bottom: 0; left: 0;
 }
 
 html {
@@ -22,7 +24,6 @@ h3 {
   width: 500px;
   height: 650px;
   -webkit-transform: translate3d(0, 0, 0);
-  margin-left: 750px;
 
 }
 
