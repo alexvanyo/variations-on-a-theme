@@ -211,6 +211,7 @@ def simpleFileRandomizer(file_name):
     else:
         return s1
 
+
 #simpleFileRandomizer('/home/andy/Desktop/VariationsOnATheme/variations-on-a-theme/uploads/Mary.mid', True)
 #simpleFileRandomizer('songs\\mary.mid') #38
 #simpleFileRandomizer('songs\\autumn_no1_allegro_gp.mid')
