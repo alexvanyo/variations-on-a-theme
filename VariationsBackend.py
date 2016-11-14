@@ -82,5 +82,5 @@ def api_error():
     return "Cannot process file(s), please try different file(s)"
 
 if __name__ == '__main__':
-    app.run(host = '0.0.0.0', port=80)
-    #app.run()
+    #app.run(host = '0.0.0.0', port=80)
+    app.run()
