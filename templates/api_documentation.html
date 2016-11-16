@@ -22,7 +22,7 @@
       <hr/>
         <div>
             Users may upload a file to this endpoint under a post request.
-            <br><br>As of now users may upload files of type MIDI, MID, XML
+            <br><br>As of now users may upload files of type MIDI, MID, XML.
             <br><br>Sample code for uploading a file with the requests library below:
       </div>
         <pre>
@@ -42,6 +42,14 @@
             <br>How this will be done is left to the user’s discretion.
             <br>In the event of a file processing error, the response object will return an error message as a String.
         </div>
+	<div class="header">
+	  <h3 class="text-muted">Known Issues</h3>
+	</div>
+	<hr/>
+	<div>
+	  <ul> API currently cannot handle percussion instruments </ul>
+	  <ul> All music is currently converted to piano </ul>
+	</div>
     </div>
   </body>
 </html>
