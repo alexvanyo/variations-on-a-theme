@@ -26,4 +26,4 @@ def run_regression(song_name, time_stamp):
     processed_stream.write("midi", fp=file_path + "/" + str(time_stamp) + ".mid")
 
 if __name__ == '__main__':
-    parallel(run_regression, corpus.getBachChorales(), time_stamp=time.time())
+    parallel(run_regression, corpus.getBachChorales(), time_stamp=time.strftime("%y-%m-%d_%H-%M-%S"))
