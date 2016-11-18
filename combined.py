@@ -2,7 +2,15 @@ from music21 import *
 from algorithms import *
 import os
 import random
+from sys import argv
+if len(argv) > 1:
+    flags = argv[1]
 
+verbose = False
+if len(argv) > 1:
+    if flags[0] == "-":
+        if "v" in flags:
+            verbose = True
 halfDuration = duration.Duration(2)
 quartDuration = duration.Duration(1)
 
@@ -44,7 +52,8 @@ def getThemes(file_name):
     parts = get_notes(file_name)
 
     for index, (part, (notes, note_durations)) in enumerate(parts.items()):
-        print 'processing part {0} ...'.format(index)
+        if verbose:
+            print 'processing part {0} ...'.format(index)
         myStream = stream.Stream()
         theme = find_theme(zip(notes, note_durations))
         for noise in theme:
@@ -100,6 +109,10 @@ def divideDictBy(dividingDict, divisor):
     return dictCopy
 
 def simpleFileRandomizer(file_name):
+    """ 
+        main function 
+    """
+
     s1 = stream.Score()
 
     songFile = get_notes(file_name)
@@ -108,8 +121,8 @@ def simpleFileRandomizer(file_name):
 
     for part in songFile.values():
         part_stream = stream.Part()
-
-        print part
+        if verbose:
+            print part
         uniquePitches = []
 
         for n in part[0]: # Creates a list containing all of the unique notes in the midi
@@ -121,7 +134,8 @@ def simpleFileRandomizer(file_name):
         # Each note has a dictionary of all the notes that follow it mapped to the probability
         pitchFrequencies = {}
         for pitch in uniquePitches:
-            print pitch
+            if verbose:
+                print pitch
             pitchFrequencies[pitch] = {}
 
         # Adds notes into the corresponding dictionaries, just by count for looping
@@ -142,8 +156,8 @@ def simpleFileRandomizer(file_name):
                             break
 
             pitchFrequencies[pitch] = divideDictBy(pitchMap, sum(pitchMap.values()))
-
-        print pitchFrequencies
+        if verbose:
+            print pitchFrequencies
 
         noteSequence = []
         for i in xrange(len(part[0])):
@@ -206,12 +220,18 @@ def simpleFileRandomizer(file_name):
 
         s1.insert(0, part_stream)
 
+    final_randomized_song = None
+    # check number of parts
     if len(songFile) == 1:
-        return writeGoodHarmony(s1[0])
+        final_randomized_song = writeGoodHarmony(s1[0])
     else:
-        return s1
+        final_randomized_song = s1
+    if verbose:
+        print 'Task completed.'
+    return final_randomized_song
 
 
 #simpleFileRandomizer('/home/andy/Desktop/VariationsOnATheme/variations-on-a-theme/uploads/Mary.mid', True)
-#simpleFileRandomizer('songs\\mary.mid') #38
+a = simpleFileRandomizer('songs/mary.mid') #38
+a.show()
 #simpleFileRandomizer('songs\\autumn_no1_allegro_gp.mid')
