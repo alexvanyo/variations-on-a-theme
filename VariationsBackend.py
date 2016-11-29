@@ -45,7 +45,8 @@ def upload():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             try:
                 randomizedSong = simpleFileRandomizer(app.config['UPLOAD_FOLDER'] + filename)
-            except:
+            except Exception, e:
+                print "Error: %s" % e
                 return redirect(url_for('variate_error'))
             fp = randomizedSong.write('midi', fp=app.config['DOWNLOAD_FOLDER'] + filename)
             filenames.append(filename)
@@ -95,8 +96,7 @@ def uploadAPI():
         file.save(os.path.join(app.config['API_UPLOADS'], filename)) #Saves original file to server
         try:
             randomizedSong = simpleFileRandomizer(app.config['API_UPLOADS'] + filename)
-        except Exception, e:
-            print "Error: %s" % e
+        except:
             return redirect(url_for('api_error'))
         fp = randomizedSong.write('midi', fp=app.config['API_DOWNLOAD'] + filename)
         return redirect(url_for('api_uploaded_file', filename=filename))
