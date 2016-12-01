@@ -65,6 +65,8 @@ html {
     text-align:center;
     line-height:16px;
     font-family: serif;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .buttonSubmit {
