@@ -45,7 +45,8 @@ def upload():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             try:
                 randomizedSong = simpleFileRandomizer(app.config['UPLOAD_FOLDER'] + filename)
-            except:
+            except Exception, e:
+                print "Error: %s" % e
                 return redirect(url_for('variate_error'))
             fp = randomizedSong.write('midi', fp=app.config['DOWNLOAD_FOLDER'] + filename)
             filenames.append(filename)
@@ -116,5 +117,5 @@ def api_error():
     return "Cannot process file(s), please try different file(s)"
 
 if __name__ == '__main__':
-    app.run(host = '0.0.0.0', port=80)
-    #app.run()
+    #app.run(host = '0.0.0.0', port=80)
+    app.run()
