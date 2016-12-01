@@ -44,7 +44,7 @@ def upload():
             filename = secure_filename(file.filename) #filename is type str
             filename = filename[:len(filename)-4] + curTime + '.mid'
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            try:
+            try: #Only displays error in console
                 randomizedSong = simpleFileRandomizer(app.config['UPLOAD_FOLDER'] + filename)
             except Exception, e:
                 print "Error: %s" % e
@@ -60,7 +60,24 @@ def uploaded_file(filename):
     """
     Sends files from server directory to the client through the browser
     """
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+@app.route('/downloads/<filename>')
+def download_file(filename):
+    """
+    Sends the files that have been variated from the server to the browser
+    """
     return send_from_directory(app.config['DOWNLOAD_FOLDER'], filename)
+
+@app.route('/uploads/past')
+def view_uploads():
+    uploadedFiles = os.listdir(app.config['UPLOAD_FOLDER'])
+    return render_template('pastUploads.html', filenames=uploadedFiles)
+
+@app.route('/downloads/past')
+def view_downloads():
+    downloadedFiles = os.listdir(app.config['DOWNLOAD_FOLDER'])
+    return render_template('pastDownloads.html', filenames=downloadedFiles)
 
 @app.route('/error/variate')
 def variate_error():

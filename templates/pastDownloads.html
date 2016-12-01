@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8">
-      <title>Variations on a Theme Uploads</title>
-  </head>
-  <body>
+    <title>Past Variations - Variations on a Theme</title>
+</head>
+<body>
   <form action="index">
     <input type="button" value="Go back" onClick="parent.location='../'"/>
       </form>
     <div class="container">
       <div class="header">
-        <h3 class="text-muted">Uploaded files</h3>
+        <h3 class="text-muted">Previously Variated Files</h3>
+          <h4 class="warning">CAUTION: FILE NAMES ARE SAME AS UPLOADED FILES</h4>
       </div>
       <hr/>
       <div>
-      Variated music files, click on them to download
+      <p>Past variated music files, click on them to download.</p>
+          <p>Files are sorted alphabetically and by date.</p>
       <ul>
         {% for file in filenames %}
           <li><a href="{{url_for('download_file', filename=file)}}">{{file}}</a></li>
@@ -23,5 +25,5 @@
       </div>
       <hr/>
       </div>
-  </body>
+</body>
 </html>

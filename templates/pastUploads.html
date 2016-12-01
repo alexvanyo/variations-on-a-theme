@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Past Uploads - Variations on a Theme</title>
+</head>
+<body>
+  <form action="index">
+    <input type="button" value="Go back" onClick="parent.location='../'"/>
+      </form>
+    <div class="container">
+      <div class="header">
+        <h3 class="text-muted">Previously Uploaded Files</h3>
+          <h4 class="warning">CAUTION: FILE NAMES ARE SAME AS VARIATED FILES</h4>
+      </div>
+      <hr/>
+      <div>
+      <p>Past uploaded music files, click on them to download.</p>
+          <p>Files are sorted alphabetically and by date.</p>
+      <ul>
+        {% for file in filenames %}
+          <li><a href="{{url_for('uploaded_file', filename=file)}}">{{file}}</a></li>
+        {% endfor %}
+      </ul>
+      </div>
+      <hr/>
+      </div>
+</body>
+</html>
