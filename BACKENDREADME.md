@@ -8,7 +8,7 @@ ps ax|grep gunicorn
 ** TO KILL GUNICORN PROCESSES: **
 pkill gunicorn
 ** TO RUN GUNICORN PROCESSES: **
-gunicorn VariationsBackend:app -b localhost:8000 &
+/usr/local/bin/gunicorn --workers=8 VariationsBackend:app -b localhost:8000 &
 ** IN ORDER TO SERVE APP WITH DEV SERVER (NOT RECOMMENDED) **
 Enter tmux with tmux
 In tmux, sudo python VariationsBackend.py

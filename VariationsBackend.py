@@ -10,6 +10,7 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = os.path.abspath('uploads/')+"/"
 app.config['DOWNLOAD_FOLDER'] = os.path.abspath('toDownload/')+"/"
 app.config['ALLOWED_EXTENSIONS'] = set(['mid','midi','xml'])
+app.config['MAX_CONTENT_LENGTH'] = 500 * 1024
 
 #Directories for API
 app.config['API_UPLOADS'] = os.path.abspath('APIuploads/')+"/"
