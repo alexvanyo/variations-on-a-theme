@@ -1,10 +1,50 @@
 from music21 import *
 from algorithms import *
-import os
+import os, sys, argparse, atexit
 import random
+from collections import OrderedDict
+from sys import argv
+
+######## argument settings ########
+f = None
+piped_output = False
+args = None
+
+def no_verbose():
+    global f, piped_output
+    piped_output = True
+    f = open(os.devnull, 'w')
+    sys.stdout = f
+
+def verbose():
+    global piped_output
+    if piped_output:
+        f.close()
+        sys.stdout = sys.__stdout__
+    piped_output = False
+
+def close_streams():
+    verbose()
+
+def start_up():
+    no_verbose()
+
+def set_args():
+    global args
+    parser = argparse.ArgumentParser(description='Variate some music.')
+    parser.add_argument('-f', '--file', dest='file', help='input a file')
+    parser.add_argument('-v', '--verbose', action='store_true', help='shows program output')
+    parser.add_argument('--version', action='version', version='%(prog)s 2.0')
+    args = parser.parse_args()
+    if args.verbose:
+        verbose()
+######## argument settings ########
+
+FILE = '<midi file>'
 
 halfDuration = duration.Duration(2)
 quartDuration = duration.Duration(1)
+
 
 # Number of notes to check for penalties
 PENALTY_HISTORY = 8
@@ -25,7 +65,7 @@ THEME_WEIGHT = 1.5
 
 def get_notes(file_name):
     song_file = converter.parse(file_name)
-    parts = {}
+    parts = OrderedDict()
     for part in song_file.parts:
         pitches = []
         note_durations = []
@@ -36,7 +76,7 @@ def get_notes(file_name):
                 pitches.append(thisNote.nameWithOctave)
             elif type(thisNote) == note.Rest:
                 pitches.append("rest")
-            note_durations.append(thisNote.duration)
+            note_durations.append(thisNote.duration.quarterLength)
         parts[part] = pitches, note_durations
     return parts
 
@@ -55,7 +95,7 @@ def getThemes(file_name):
             else:
                 # print noise
                 thisNote = note.Note(noise[0])
-            thisNote.duration = noise[1]
+            thisNote.duration = duration.Duration(noise[1])
             myStream.append(thisNote)
         if len(myStream.pitches) != 0:
             return myStream
@@ -100,6 +140,10 @@ def divideDictBy(dividingDict, divisor):
     return dictCopy
 
 def simpleFileRandomizer(file_name):
+    """ 
+        main function 
+    """
+
     s1 = stream.Score()
 
     songFile = get_notes(file_name)
@@ -108,7 +152,6 @@ def simpleFileRandomizer(file_name):
 
     for part in songFile.values():
         part_stream = stream.Part()
-
         print part
         uniquePitches = []
 
@@ -142,7 +185,6 @@ def simpleFileRandomizer(file_name):
                             break
 
             pitchFrequencies[pitch] = divideDictBy(pitchMap, sum(pitchMap.values()))
-
         print pitchFrequencies
 
         noteSequence = []
@@ -201,17 +243,44 @@ def simpleFileRandomizer(file_name):
                 n = note.Rest()
             else:
                 n = note.Note(str(noteSequence[i]))
-            n.duration = part[1][i]
+            n.duration = duration.Duration(part[1][i])
             part_stream.append(n)
 
         s1.insert(0, part_stream)
 
+    final_randomized_song = None
+    # check number of parts
     if len(songFile) == 1:
-        return writeGoodHarmony(s1[0])
+        final_randomized_song = writeGoodHarmony(s1[0])
     else:
-        return s1
+        final_randomized_song = s1
+    print 'Task completed.'
+    return final_randomized_song
+
+def variate(file_name):
+    print 'Attempting to variate \'{}\''.format(file_name)
+    randomized_song = simpleFileRandomizer(file_name)
+    return randomized_song
 
 
-#simpleFileRandomizer('/home/andy/Desktop/VariationsOnATheme/variations-on-a-theme/uploads/Mary.mid', True)
-#simpleFileRandomizer('songs\\mary.mid') #38
-#simpleFileRandomizer('songs\\autumn_no1_allegro_gp.mid')
+# only execute if running this directly
+if __name__ == '__main__':
+    atexit.register(close_streams)
+    set_args()
+    if not piped_output:
+        no_verbose()
+    if args.file:
+        if os.path.exists(args.file):
+            try:
+                variate(args.file).show()
+            except Exception as e:
+                verbose()
+                print e.message()
+                print '(Hint: Are you sure the input file in valid format?)'
+        else:
+            verbose()
+            print '\'{}\' is not a valid path.'.format(args.file)
+    else:
+        verbose()
+        variate(FILE).show()
+

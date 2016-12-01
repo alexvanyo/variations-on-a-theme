@@ -2,7 +2,7 @@ from music21 import *
 
 COMMON_PROGRESSIONS = [4,5,1,-4,-5,-1]
 
-nekedMelody = converter.parse('mary.mid')
+nekedMelody = converter.parse('songs/mary.mid')
 melody = nekedMelody.makeMeasures()
 
 def getMajorScale(tonic):
@@ -37,7 +37,7 @@ def getKey(melody):
                 keySig = item
     if keySig is not None:
         return keySig
-
+    """
     numSharps = numFlats = 0
     uniqueAccs = set()
     for measure in melody:
@@ -53,7 +53,8 @@ def getKey(melody):
                             numSharps += 1
                             uniqueAccs.add(thisPitch)
     keySig = key.Key(KeySignature(max(numSharps,numFlats)))
-    return keySig
+    """
+    return nekedMelody.analyze('key')
 
 def getChordStructure(chordScale):
     chordStruct = []
@@ -68,12 +69,14 @@ def getChordStructure(chordScale):
         newChord = chord.Chord([root,third,fifth])
 
         chordStruct.append(newChord)
-
     return chordStruct
 
 def getNextChord(chordStruct, root):
+    #print chordStruct
     for thisChord in chordStruct:
         if thisChord.fifth.pitchClass == root.pitch.pitchClass:
+            if thisChord.quality == 'diminished':
+                return chord.Chord(chordStruct[1].pitches)
             return chord.Chord(thisChord.pitches)
 
     return None
@@ -81,6 +84,9 @@ def getNextChord(chordStruct, root):
 def checkChordProgression(chordStruct, currChords, lastChord, currNote):
     chordNum = 0
     compareChord = currChords[lastChord]
+
+    if type(compareChord) is note.Rest:
+        return None
     for i in range(len(chordStruct)):
         if chordStruct[i].root().pitchClass == compareChord.root().pitchClass:
             chordNum = i
@@ -113,6 +119,7 @@ def createChords(scale):
                         isStart = False
                     else:
                         newChord = checkChordProgression(chordStruct, chords, currChord, thisObj)
+
                     if newChord is None:
                         newChord = getNextChord(chordStruct, thisObj)
 
@@ -135,6 +142,10 @@ def createChords(scale):
                     newChord.duration = duration.Duration(chordLen)
                     chords.append(newChord)
                     currChord += 1
+                else:
+                    newRest = note.Rest()
+                    newRest.duration.quarterLength = getDuration(thisObj)
+                    chords.append(newRest)
             i+=1
     return chords
 
