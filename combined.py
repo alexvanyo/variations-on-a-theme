@@ -76,7 +76,7 @@ def get_notes(file_name):
                 pitches.append(thisNote.nameWithOctave)
             elif type(thisNote) == note.Rest:
                 pitches.append("rest")
-            note_durations.append(thisNote.duration)
+            note_durations.append(thisNote.duration.quarterLength)
         parts[part] = pitches, note_durations
     return parts
 
@@ -95,7 +95,7 @@ def getThemes(file_name):
             else:
                 # print noise
                 thisNote = note.Note(noise[0])
-            thisNote.duration = noise[1]
+            thisNote.duration = duration.Duration(noise[1])
             myStream.append(thisNote)
         if len(myStream.pitches) != 0:
             return myStream
@@ -243,7 +243,7 @@ def simpleFileRandomizer(file_name):
                 n = note.Rest()
             else:
                 n = note.Note(str(noteSequence[i]))
-            n.duration = part[1][i]
+            n.duration = duration.Duration(part[1][i])
             part_stream.append(n)
 
         s1.insert(0, part_stream)
