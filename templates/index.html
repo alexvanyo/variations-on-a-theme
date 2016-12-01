@@ -9,9 +9,14 @@
       $(function() {
         $("input:file").change(function (){
           var fileName = $(this).val();
-          if (fileName.length > 0) {
-            $(".custom-file-upload").html('1 File Selected');
-            $(".custom-file-upload").css('font-size', '12px');
+          var files = $("input:file")[0].files
+          if (files.length > 0) {
+            if (files.length == 1) {
+              $(".custom-file-upload").html('1 File Selected');
+            }
+            else {
+              $(".custom-file-upload").html(files.length + ' Files Selected');
+            }
           }
           else {
             $(".custom-file-upload").html('Choose File');
