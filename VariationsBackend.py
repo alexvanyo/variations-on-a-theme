@@ -71,11 +71,17 @@ def download_file(filename):
 
 @app.route('/uploads/past')
 def view_uploads():
+    """
+    Fetches list of files in uploads directory then sends them to the html
+    """
     uploadedFiles = os.listdir(app.config['UPLOAD_FOLDER'])
     return render_template('pastUploads.html', filenames=uploadedFiles)
 
 @app.route('/downloads/past')
 def view_downloads():
+    """
+    Fetches list of files in downloads directory then sends them to the html
+    """
     downloadedFiles = os.listdir(app.config['DOWNLOAD_FOLDER'])
     return render_template('pastDownloads.html', filenames=downloadedFiles)
 
