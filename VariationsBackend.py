@@ -68,14 +68,14 @@ def variate_error():
     Handles error message for combined.py failure. Failure is typically due to algorithim's
     inability to process part of the song
     """
-    return "Cannot process file(s), please try different file(s)"
+    return render_template('errorPage.html')
 
 @app.route('/error/filetype')
 def filetype_error():
     """
     Handles error returning if the allowed_file function decides file type is not allowed
     """
-    return "Improper file type, please choose an MID, MIDI, or XML file type"
+    return render_template('errorPage.html')
 
 @app.route('/api/documentation')
 def displayAPIDocs():
