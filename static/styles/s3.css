@@ -2,7 +2,7 @@ body {
   background-image: url(c.jpg);
   background-repeat: no-repeat;
   color: white;
-  font-family: ‘Palatino Linotype’, ‘Book Antiqua’, Palatino, serif;
+  font-family: serif;
   position: fixed;
   background-size: : 100% 100%;
   top: 0; right: 0; bottom: 0; left: 0;
@@ -12,58 +12,78 @@ html {
     height: 100%;
 }
 
-h3 {
-  margin-left:115px;
-  margin-top: 200px;
-  font-size: 30px;
-  position: fixed;
+.container {
+    width: 500px;
+    height: 650px;
+    display: table;
+    -webkit-transform: translate3d(0, 0, 0);
 }
 
-.container {
-  border: 1px solid transparent;
-  width: 500px;
-  height: 650px;
-  -webkit-transform: translate3d(0, 0, 0);
+.submit {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.form {
+    display: block;
+    text-align: center;
+    vertical-align: middle;
+    width:62%;
+    margin:0 auto;
+    padding-top: 10px;
+}
+
+.text-muted {
+    text-align:center;
+    display:block;
+    font-size: 30px;
+    width: 10em;
+    margin:0 auto;
+    vertical-align: middle;
 }
 
 .inputFile {
-	opacity: 0;
-	z-index: -1;
-  width: 0px;
+  	opacity: 0;
+  	z-index: -1;
+    width: 0px;
 }
 
 .custom-file-upload {
     border: 1px solid #ccc;
     color: white;
     padding: 15px 32px;
-    text-align: center;
     text-decoration: none;
-    font-size: 13px;
-    margin-left:100px;
-    margin-top: 300px;
     cursor: pointer;
     background-color: transparent;
-    width: 80px;
-    height: 16px;
-    display:block;
-    vertical-align: middle;
+    font-size: 16px;
+    border-right:none;
+    margin:0;
+    width:6em;
+    float:left;
+    height:16px;
+    overflow:hidden;
+    text-align:center;
+    line-height:16px;
+    font-family: serif;
 }
 
 .buttonSubmit {
     border: 1px solid #ccc;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    font-size: 16px;
-    font-size: 13px;
-    margin-left:300px;
-    margin-top: -66px;
-    cursor: pointer;
     background-color: transparent;
-    width: 150px;
+    color: white;
+    vertical-align:top;
+    padding: 15px 32px;
+    margin:0;
+    float:left;
     height: 48px;
-    display:block;
+    overflow:hidden;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 16px;
+    width:9em;
+    text-align:center;
+    line-height:16px;
+    font-family: serif;
 }
 
 .custom-file-upload:hover {
