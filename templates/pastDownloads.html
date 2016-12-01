@@ -16,7 +16,7 @@
       <hr/>
       <div>
       <p>Past variated music files, click on them to download.</p>
-          <p>Files are sorted alphabetically and by date.</p>
+          <p>Files are sorted by time (denoted by numbers following file name).</p>
       <ul>
         {% for file in filenames %}
           <li><a href="{{url_for('download_file', filename=file)}}">{{file}}</a></li>
