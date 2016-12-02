@@ -139,13 +139,35 @@ html {
     background-color: transparent;
     color: white;
     padding: 15px 32px;
-    margin:0 auto;
+    margin:0;
+    float: left;
     height: 48px;
     overflow:hidden;
     text-decoration: none;
     cursor: pointer;
     font-size: 14px;
-    width:11em;
+    width:11.5em;
+    text-align:center;
+    line-height:16px;
+    font-family: serif;
+    display:block;
+    white-space: nowrap;
+    vertical-align:middle;
+}
+
+.api {
+    border: 1px solid #ccc;
+    background-color: transparent;
+    color: white;
+    padding: 15px 32px;
+    margin:0;
+    float: left;
+    height: 48px;
+    overflow:hidden;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 16px;
+    width:9em;
     text-align:center;
     line-height:16px;
     font-family: serif;
@@ -171,5 +193,9 @@ html {
 }
 
 .down:hover {
+    background-color: lightslategray;
+}
+
+.api:hover {
     background-color: lightslategray;
 }
