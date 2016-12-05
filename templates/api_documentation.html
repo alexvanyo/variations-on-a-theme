@@ -36,7 +36,7 @@
             files = {'files':open(file,"rb")}
 
             r = requests.post(url, files=files)
-            fileURL = r.ur
+            fileURL = r.url
             fileEncoding = r.encoding
             fileHeaders = r.headers
         </pre>
