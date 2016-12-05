@@ -20,8 +20,8 @@ html {
 }
 
 .submit {
-  display: table-cell;
-  vertical-align: middle;
+    display: table-cell;
+    vertical-align: middle;
 }
 
 .form {
@@ -67,6 +67,7 @@ html {
     font-family: serif;
     overflow: hidden;
     white-space: nowrap;
+    margin-bottom: 40px;
 }
 
 .buttonSubmit {
@@ -86,6 +87,93 @@ html {
     text-align:center;
     line-height:16px;
     font-family: serif;
+    margin-bottom: 40px;
+}
+
+.up {
+    border: 1px solid #ccc;
+    background-color: transparent;
+    color: white;
+    padding: 15px 32px;
+    margin:0;
+    float:left;
+    height: 48px;
+    overflow:hidden;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 16px;
+    width:10.05em;
+    text-align:center;
+    line-height:16px;
+    font-family: serif;
+    display:block;
+    white-space: nowrap;
+    vertical-align: middle;
+    margin-bottom: 40px;
+}
+
+.down {
+    border: 1px solid #ccc;
+    background-color: transparent;
+    color: white;
+    padding: 15px 32px;
+    margin:0;
+    float:left;
+    height: 48px;
+    overflow:hidden;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 16px;
+    width:9em;
+    text-align:center;
+    line-height:16px;
+    font-family: serif;
+    display:block;
+    white-space: nowrap;
+    vertical-align: middle;
+    margin-bottom: 40px;
+}
+
+.b {
+    border: 1px solid #ccc;
+    background-color: transparent;
+    color: white;
+    padding: 15px 32px;
+    margin:0;
+    float: left;
+    height: 48px;
+    overflow:hidden;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 14px;
+    width:11.5em;
+    text-align:center;
+    line-height:16px;
+    font-family: serif;
+    display:block;
+    white-space: nowrap;
+    vertical-align:middle;
+}
+
+.api {
+    border: 1px solid #ccc;
+    background-color: transparent;
+    color: white;
+    padding: 15px 32px;
+    margin:0;
+    float: left;
+    height: 48px;
+    overflow:hidden;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 16px;
+    width:9em;
+    text-align:center;
+    line-height:16px;
+    font-family: serif;
+    display:block;
+    white-space: nowrap;
+    vertical-align:middle;
 }
 
 .custom-file-upload:hover {
@@ -93,5 +181,21 @@ html {
 }
 
 .buttonSubmit:hover {
+    background-color: lightslategray;
+}
+
+.b:hover {
+    background-color: lightslategray;
+}
+
+.up:hover {
+    background-color: lightslategray;
+}
+
+.down:hover {
+    background-color: lightslategray;
+}
+
+.api:hover {
     background-color: lightslategray;
 }
