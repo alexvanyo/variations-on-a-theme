@@ -9,7 +9,7 @@ app = Flask(__name__)
 #Sets file path names for ease of use
 app.config['UPLOAD_FOLDER'] = os.path.abspath('uploads/')+"/"
 app.config['DOWNLOAD_FOLDER'] = os.path.abspath('toDownload/')+"/"
-app.config['ALLOWED_EXTENSIONS'] = set(['mid','midi','xml'])
+app.config['ALLOWED_EXTENSIONS'] = set(['mid','midi'])
 app.config['MAX_CONTENT_LENGTH'] = 250 * 1024
 
 #Directories for API
