@@ -32,7 +32,7 @@
             import requests
 
             file = "/path/to/file/file.mid"
-            url = "http://ec2-35-160-236-10.us-west-2.compute.amazonaws.com/api/variate"
+            url = "http://variationsonatheme.herokuapp.com/api/variate"
             files = {'files':open(file,"rb")}
 
             r = requests.post(url, files=files)
